@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>શૈક્ષણિક ક્વિઝ રમત - પાક ઉત્પાદન અને વ્યવસ્થાપન</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-blue: #1e88e5;
+            --dark-blue: #1565c0;
+            --body-bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Hind Vadodara', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .top-header {
+            background: linear-gradient(135deg, #1565c0, #1e88e5);
+            color: white; width: 100%; text-align: center; padding: 25px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        .top-header h1 { margin: 0 0 8px 0; font-size: 32px; font-weight: 700; }
+        
+        .creator-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 20px; border-radius: 50px;
+            font-size: 16px; font-weight: 600; display: inline-block;
+            margin-top: 5px; border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .main-container { width: 95%; max-width: 850px; padding: 25px 10px; box-sizing: border-box; }
+        
+        .panel-card {
+            background-color: var(--card-bg); border-radius: 14px; padding: 25px;
+            margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.03);
+            position: relative;
+        }
+        
+        .panel-title { font-size: 20px; font-weight: 700; color: var(--dark-blue); margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 16px; }
+        .form-control {
+            width: 100%; padding: 12px; font-size: 16px; border: 2px solid #cbd5e1;
+            border-radius: 8px; font-family: 'Hind Vadodara', sans-serif; box-sizing: border-box;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary-blue); }
+        
+        .question-box { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 25px; color: #1565c0; line-height: 1.5; }
+        
+        .grid-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 15px; }
+        
+        .opt-box {
+            background-color: var(--card-bg); border: 2.5px solid #cbd5e1; border-radius: 12px;
+            padding: 20px 15px; text-align: center; font-size: 20px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s; box-shadow: 0 3px 6px rgba(0,0,0,0.03);
+        }
+        .opt-box:hover { transform: translateY(-2px); border-color: #94a3b8; background-color: #f8fafc; }
+        .opt-box.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #15803d; box-shadow: 0 4px 10px rgba(34,197,94,0.2); }
+        .opt-box.incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #b91c1c; box-shadow: 0 4px 10px rgba(239,68,68,0.2); }
+        
+        .action-btn {
+            display: block; width: 100%; border: none; padding: 14px; font-size: 18px;
+            font-weight: bold; border-radius: 8px; cursor: pointer; text-align: center;
+            font-family: 'Hind Vadodara', sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn-success { background: #2e7d32; color: white; }
+        .btn-success:hover { background: #1b5e20; }
+        .btn-primary { background: var(--dark-blue); color: white; }
+        .btn-primary:hover { background: #0d47a1; }
+        
+        .score-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; text-align: center; }
+        .score-card { border-radius: 10px; padding: 15px; font-size: 18px; font-weight: 700; }
+        
+        #setupArea, #gameArea, #resultArea { display: none; }
+        #setupArea { display: block; }
+        
+        .badge-info { background: #e0f2fe; color: #0369a1; padding: 5px 12px; border-radius: 6px; font-size: 14px; font-weight: bold; display: inline-block; margin-bottom: 15px; }
+
+        .timer-container {
+            width: 100%; background-color: #e2e8f0; height: 12px; border-radius: 10px;
+            margin-bottom: 20px; overflow: hidden; display: none;
+        }
+        .timer-bar {
+            height: 100%; width: 100%; background: linear-gradient(90deg, #4ade80, #ef4444);
+            transition: width 1s linear;
+        }
+        .timer-text { font-size: 16px; font-weight: bold; color: #ef4444; text-align: right; margin-bottom: 5px; }
+
+        .vg-popup {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
+            background: linear-gradient(135deg, #ff9800, #ff5722); color: white;
+            padding: 25px 50px; border-radius: 20px; font-size: 36px; font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 9999; opacity: 0;
+            pointer-events: none; text-align: center; border: 4px solid #fff;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .vg-popup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div id="vgPopup" class="vg-popup">🌟 VERY GOOD! 🌟<br><span style="font-size: 22px;">ખૂબ જ સરસ દોસ્ત! 🎉</span></div>
+
+    <div class="top-header">
+        <h1>🎯 શૈક્ષણિક પ્રશ્નોત્તરી રમત</h1>
+        <div class="creator-info">
+            <i class="fa-solid fa-user-tie"></i> <b>CREATED BY:</b> TR. KETAN SOLANKI | 
+            <i class="fa-solid fa-school"></i> <b>SCHOOL:</b> RANGPUR PRI. SCHOOL, TA: VANSDA, DI: NAVSARI
+        </div>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="panel-card" id="setupArea">
+            <div class="panel-title"><i class="fa-solid fa-id-card"></i> બાળકની વિગત ભરો</div>
+            
+            <div class="badge-info">ધોરણ: ૮ | વિષય: વિજ્ઞાન | પ્રકરણ: ૧. પાક ઉત્પાદન અને વ્યવસ્થાપન</div>
+
+            <div class="form-group">
+                <label for="studentName"><i class="fa-solid fa-user"></i> વિદ્યાર્થીનું નામ લખો:</label>
+                <input type="text" id="studentName" class="form-control" placeholder="દા.ત. પ્રેરિત સોલંકી">
+            </div>
+
+            <div class="form-group">
+                <label for="studentRoll"><i class="fa-solid fa-list-ol"></i> રોલ નંબર / હાજરી નંબર:</label>
+                <input type="number" id="studentRoll" class="form-control" placeholder="દા.ત. 15">
+            </div>
+
+            <div style="margin-top: 25px;">
+                <button class="action-btn btn-primary" onclick="startGame()"><i class="fa-solid fa-play"></i> રમત શરૂ કરો</button>
+            </div>
+        </div>
+
+        <div id="gameArea">
+            <div class="panel-card">
+                <div id="timerWrapper">
+                    <div class="timer-text" id="timerCount">બાકી સમય: ૧૦ સેકન્ડ</div>
+                    <div class="timer-container" id="timerContainer" style="display: block;">
+                        <div class="timer-bar" id="timerBar"></div>
+                    </div>
+                </div>
+
+                <div class="question-box" id="questionText">પ્રશ્ન લોડ થઈ રહ્યો છે...</div>
+                <div class="grid-options" id="optionsGrid"></div>
+                <div style="margin-top: 20px;">
+                    <button class="action-btn btn-success" id="nextBtn" onclick="nextQuestion()" style="display:none;">આગલો પ્રશ્ન ➡️</button>
+                </div>
+            </div>
+
+            <div class="panel-card">
+                <div class="score-grid">
+                    <div class="score-card" style="background-color: #e8f5e9; color: #2e7d32;">સાચા જવાબ: <span id="correctScore">0</span></div>
+                    <div class="score-card" style="background-color: #ffebee; color: #c62828;">ખોટા પ્રયત્ન: <span id="wrongScore">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-card" id="resultArea" style="text-align: center;">
+            <i class="fa-solid fa-trophy" style="font-size: 60px; color: #fbc02d; margin-bottom: 15px;"></i>
+            <h2>🏆 રમત પૂર્ણ થઈ ગઈ છે! 🏆</h2>
+            <h3 id="resultNameLabel" style="color: var(--dark-blue); margin: 5px 0 20px 0;">વિદ્યાર્થી: </h3>
+            
+            <div class="score-grid" style="max-width: 400px; margin: 0 auto 25px auto;">
+                <div class="score-card" style="background:#e0f2f1; font-size:22px;">કુલ સાચા: <span id="finalCorrect">0</span></div>
+                <div class="score-card" style="background:#eceff1; font-size:22px;">કુલ ખોટા: <span id="finalWrong">0</span></div>
+            </div>
+
+            <div id="savingStatus" style="font-weight: 600; color: #00796b; margin-bottom: 20px;">
+                <i class="fa-solid fa-spinner fa-spin"></i> વિદ્યાર્થીનો ડેટા ઓનલાઇન સુરક્ષિત સેવ થઈ રહ્યો છે...
+            </div>
+            
+            <button class="action-btn btn-primary" onclick="resetToSetup()" style="max-width: 300px; margin: 0 auto;"><i class="fa-solid fa-rotate-right"></i> નવી રમત શરૂ કરો</button>
+        </div>
+
+    </div>
+
+    <script>
+        const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzga6uF68GCF66FebHNgqCYZR08zhmdS_gpOdzu3CYezxONqKwhZUeXmZ2_l6bbTNI1Wg/exec"; 
+
+        // 📊 શુદ્ધ ગુજરાતી લખાણ સાથેના ૩૦ પ્રશ્નો
+        const questions = [
+            { q: "નીચેનામાંથી કયો ખરીફ પાક છે?", options: ["ઘઉં", "ડાંગર", "ચણા", "રાઈ"], answer: "ડાંગર" },
+            { q: "શિયાળામાં રોપવામાં આવતા પાકને શું કહેવાય છે?", options: ["ખરીફ પાક", "રવિ પાક", "જાયદ પાક", "રોકડિયો પાક"], answer: "રવિ પાક" },
+            { q: "જમીનને ઉપર-નીચે અને પોચી કરવાની પ્રક્રિયાને શું કહે છે?", options: ["લણણી", "વાવણી", "ખેડાણ", "નીંદણ"], answer: "ખેડાણ" },
+            { q: "ખેતરને સમથળ કરવા માટે કયા સાધનનો ઉપયોગ થાય છે?", options: ["હળ", "ખરપિયો", "સમાર (પ્લેન્ક)", "વાવણીયો"], answer: "સમાર (પ્લેન્ક)" },
+            { q: "જમીનમાં પોષકદ્રવ્યોનું પ્રમાણ જાળવી રાખવા માટે શું ઉમેરવામાં આવે છે?", options: ["જંતુનાશક", "ખાતર", "નીંદણનાશક", "પાણી"], answer: "ખાતર" },
+            { q: "નીચેનામાંથી કયું કુદરતી ખાતરનું ઉદાહરણ છે?", options: ["યુરિયા", "સુપર ફોસ્ફેટ", "વર્મીકમ્પોસ્ટ", "પોટાશ"], answer: "વર્મીકમ્પોસ્ટ" },
+            { q: "અળસિયા દ્વારા તૈયાર થતા ખાતરને શું કહે છે?", options: ["કમ્પોસ્ટ ખાતર", "વર્મીકમ્પોસ્ટ ખાતર", "લીલો પડવાસ", "રાસાયણિક ખાતર"], answer: "વર્મીકમ્પોસ્ટ ખાતર" },
+            { q: "પાણીની અછતવાળા વિસ્તારમાં સિંચાઈની કઈ પદ્ધતિ શ્રેષ્ઠ છે?", options: ["ધોરિયા પદ્ધતિ", "ફુવારા પદ્ધતિ", "ટપક પદ્ધતિ", "સરભર પદ્ધતિ"], answer: "ટપક પદ્ધતિ" },
+            { q: "ટપક સિંચાઈ પદ્ધતિમાં પાણી ક્યાં પડે છે?", options: ["છોડના પાંદડા પર", "છોડના પ્રકાંડ પર", "છોડના મૂળ પાસે સીધું", "હવામાં ફુવારા રૂપે"], answer: "છોડના મૂળ પાસે સીધું" },
+            { q: "પાક સાથે ઉગી નીકળતી બિનજરૂરી વનસ્પતિને શું કહે છે?", options: ["નીંદણ", "મુખ્ય પાક", "શાકભાજી", "તૃણભક્ષી"], answer: "નીંદણ" },
+            { q: "નીંદણ દૂર કરવાની પ્રક્રિયાને શું કહે છે?", options: ["લણણી", "ખેડાણ", "વાવણી", "નીંદણ (ખુરપીકામ)"], answer: "નીંદણ (ખુરપીકામ)" },
+            { q: "પાક પરિપક્વ થઈ ગયા બાદ તેને કાપવાની ક્રિયાને શું કહે છે?", options: ["વાવણી", "લણણી", "મિશ્રણ", "ગ્રેડિંગ"], answer: "લણણી" },
+            { q: "અનાજના દાણાઓને ફોતરામાંથી અલગ કરવાની ક્રિયાને શું કહે છે?", options: ["થ્રેશિંગ", "વાવણી", "ખેડાણ", "સિંચાઈ"], answer: "થ્રેશિંગ" },
+            { q: "લણણી અને થ્રેશિંગ બંને કામ એકસાથે કરતું મશીન કયું છે?", options: ["ટ્રેક્ટર", "હાર્વેસ્ટર", "કમ્બાઈન", "સીડ-ડ્રિલ"], answer: "કમ્બાઈન" },
+            { q: "ખેડૂત અનાજનો મોટા પાયે સંગ્રહ શેમાં કરે છે?", options: ["પ્લાસ્ટિકની કોથળીમાં", "સાઇલો અથવા કોઠારમાં", "ખુલ્લા મેદાનમાં", "માટીના વાસણમાં"], answer: "સાઇલો અથવા કોઠારમાં" },
+            { q: "ઘરમાં અનાજ સંગ્રહ વખતે જીવાતોથી બચવા કોના સૂકા પાન મુકાય છે?", options: ["આસોપાલવ", "લીમડો", "તુલસી", "વડ"], answer: "લીમડો" },
+            { q: "નીચેનામાંથી કયું રાસાયણિક ખાતર નથી?", options: ["NPK", "યુરિયા", "છાણિયું ખાતર", "એમોનિયમ સલ્ફેટ"], answer: "છાણિયું ખાતર" },
+            { q: "સિંચાઈની પરંપરાગત રીતોમાં કોનો સમાવેશ થતો નથી?", options: ["મોટ", "ચેન પંપ", "ઢેકલી", "ટપક પદ્ધતિ"], answer: "ટપક પદ્ધતિ" },
+            { q: "વાવણી કરવા માટે કયા આધુનિક સાધનનો ઉપયોગ થાય છે?", options: ["હળ", "સીડ-ડ્રિલ (વાવણીયો)", "ખરપિયો", "સમાર"], answer: "સીડ-ડ્રિલ (વાવણીયો)" },
+            { q: "જમીનની જલધારણ ક્ષમતામાં કોનાથી વધારો થાય છે?", options: ["રાસાયણિક ખાતર", "કુદરતી ખાતર", "જંતુનાશક દવા", "નીંદણનાશક દવા"], answer: "કુદરતી ખાતર" },
+            { q: "કઠોળના છોડના મૂળની ગંડિકાઓમાં કયા બેક્ટેરિયા નાઇટ્રોજન સ્થાપન કરે છે?", options: ["લેક્ટોબેસિલી", "રાઇઝોબિયમ", "વાયરસ", "પ્લાઝ્મોડિયમ"], answer: "રાઇઝોબિયમ" },
+            { q: "જો કોઈ ખેડૂત ખેતરમાં વારંવાર એક જ પાક લે તો જમીન પર શું અસર થાય?", options: ["પોષક તત્વો વધી જાય", "પોષક તત્વોની અછત થાય", "જમીન પોચી બને", "જમીન લાલ બને"], answer: "પોષક તત્વોની અછત થાય" },
+            { q: "જંતુનાશકોનો વધુ પડતો ઉપયોગ કરવાથી શું નુકસાન થાય છે?", options: ["પાક ઝડપથી ઉગે છે", "જમીન અને પાણીનું પ્રદૂષણ થાય છે", "જમીનની ફળદ્રુપતા વધે છે", "નીંદણ નાશ પામે છે"], answer: "જમીન અને પાણીનું પ્રદૂષણ થાય છે" },
+            { q: "નીચેનામાંથી કયું કેમિકલ નીંદણનાશક (2,4-D) નું ઉદાહરણ છે?", options: ["યુરિયા", "NPK", "2,4-D", "માઇક્રોન્યુટ્રિઅન્ટ"], answer: "2,4-D" },
+            { q: "અનાજ સંગ્રહ કરતા પહેલા તેને તડકામાં સૂકવવું કેમ જરૂરી છે?", options: ["ભેજનું પ્રમાણ ઘટાડવા", "વજન વધારવા", "રંગ બદલવા", "દાણા મોટા કરવા"], answer: "ભેજનું પ્રમાણ ઘટાડવા" },
+            { q: "પશુપાલન એટલે શું?", options: ["પશુઓનો શિકાર કરવો", "ઘરમાં પશુઓ રાખવા", "પશુઓને મોટા પાયે પાળવા અને સંભાળ રાખવી", "પશુઓ વેચવા"], answer: "પશુઓને મોટા પાયે પાળવા અને સંભાળ રાખવી" },
+            { q: "કયા પાકને રોપવા માટે ખેતરમાં પાણી ભરેલું રાખવું પડે છે?", options: ["ઘઉં", "મકાઈ", "ચણા", "ડાંગર"], answer: "ડાંગર" },
+            { q: "નીચેનામાંથી કયું સાધન નીંદણ દૂર કરવા અને જમીન પોચી કરવા વપરાય છે?", options: ["હળ", "ખરપિયો", "સીડ-ડ્રિલ", "થ્રેશર"], answer: "ખરપિયો" },
+            { q: "જમીનમાં પોષક તત્વો કુદરતી રીતે પાછા લાવવાની પદ્ધતિ કઈ છે?", options: ["પાકની ફેરબદલી", "વધુ સિંચાઈ", "વધુ રાસાયણિક ખાતર", "જંતુનાશકનો છંટકાવ"], answer: "પાકની ફેરબદલી" },
+            { q: "માછલીમાંથી મળતા કયા તેલમાં વિટામિન-ડી ભરપૂર માત્રામાં હોય છે?", options: ["મસ્ટર્ડ ઓઇલ", "કોડ લિવર ઓઇલ", "કોકોનટ ઓઇલ", "કેસ્ટર ઓઇલ"], answer: "કોડ લિવર ઓઇલ" }
+        ];
+
+        let currentQIndex = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let answered = false;
+        let sName = "";
+        let sRoll = "";
+        let timerInterval = null;
+        let timeLeft = 10;
+
+        function startGame() {
+            sName = document.getElementById('studentName').value.trim();
+            sRoll = document.getElementById('studentRoll').value.trim();
+
+            if (!sName) {
+                alert("કૃપા કરીને પહેલા વિદ્યાર્થીનું નામ લખો!");
+                return;
+            }
+
+            document.getElementById('setupArea').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+            
+            correctCount = 0;
+            wrongCount = 0;
+            currentQIndex = 0;
+            document.getElementById('correctScore').textContent = "0";
+            document.getElementById('wrongScore').textContent = "0";
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            document.getElementById('nextBtn').style.display = 'none';
+            let qData = questions[currentQIndex];
+            document.getElementById('questionText').textContent = `${currentQIndex + 1}. ${qData.q}`;
+            
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = '';
+
+            let shuffledOptions = [...qData.options].sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach(opt => {
+                const box = document.createElement('div');
+                box.className = 'opt-box';
+                box.textContent = opt;
+                box.onclick = () => checkAnswer(box, opt, qData.answer);
+                grid.appendChild(box);
+            });
+
+            resetAndStartTimer();
+        }
+
+        function resetAndStartTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 10;
+            const bar = document.getElementById('timerBar');
+            const countText = document.getElementById('timerCount');
+            
+            bar.style.width = "100%";
+            countText.textContent = `બાકી સમય: ${timeLeft} સેકન્ડ`;
+            countText.style.color = "#ef4444";
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                bar.style.width = (timeLeft * 10) + "%";
+                countText.textContent = `બાકી સમય: ${timeLeft} સેકન્ડ`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timeOutAction();
+                }
+            }, 1000);
+        }
+
+        function timeOutAction() {
+            if (answered) return;
+            answered = true;
+            
+            wrongCount++;
+            document.getElementById('wrongScore').textContent = wrongCount;
+            speakMessage("સમય પૂરો થઈ ગયો!");
+
+            let qData = questions[currentQIndex];
+            Array.from(document.getElementById('optionsGrid').children).forEach(box => {
+                if(box.textContent.trim() === qData.answer.trim()) box.classList.add('correct');
+            });
+
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function checkAnswer(element, selected, correct) {
+            if (answered) return;
+            answered = true;
+            clearInterval(timerInterval); 
+
+            if (selected.trim() === correct.trim()) {
+                element.classList.add('correct');
+                correctCount++;
+                document.getElementById('correctScore').textContent = correctCount;
+                
+                showVeryGoodCelebration();
+                speakMessage("વેરી ગુડ, સાચો જવાબ!");
+            } else {
+                element.classList.add('incorrect');
+                wrongCount++;
+                document.getElementById('wrongScore').textContent = wrongCount;
+                speakMessage("ખોટો જવાબ");
+                
+                Array.from(document.getElementById('optionsGrid').children).forEach(box => {
+                    if(box.textContent.trim() === correct.trim()) box.classList.add('correct');
+                });
+            }
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function showVeryGoodCelebration() {
+            const popup = document.getElementById('vgPopup');
+            popup.classList.add('show');
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 1300);
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < questions.length) {
+                loadQuestion();
+            } else {
+                finishGame();
+            }
+        }
+
+        function finishGame() {
+            clearInterval(timerInterval);
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block';
+            
+            document.getElementById('resultNameLabel').textContent = `વિદ્યાર્થી: ${sName} (હાજરી નં: ${sRoll})`;
+            document.getElementById('finalCorrect').textContent = `${correctCount} / ${questions.length}`;
+            document.getElementById('finalWrong').textContent = wrongCount;
+            
+            speakMessage("અભિનંદન તમે રમત પૂર્ણ કરી લીધી છે");
+            saveDataToGoogleSheet();
+        }
+
+        function saveDataToGoogleSheet() {
+            const statusDiv = document.getElementById('savingStatus');
+
+            const payload = {
+                timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}),
+                studentName: sName,
+                rollNumber: sRoll,
+                totalQuestions: questions.length,
+                correctAnswers: correctCount,
+                wrongAnswers: wrongCount
+            };
+
+            fetch(GOOGLE_SHEET_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                statusDiv.innerHTML = "<span style='color:#2e7d32;'><i class='fa-solid fa-cloud-check'></i> ડેટા ગુગલ શીટમાં ઓનલાઇન સેવ થઈ ગયો છે! ✅</span>";
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                statusDiv.innerHTML = "<span style='color:#c62828;'><i class='fa-solid fa-triangle-exclamation'></i> ડેટા સેવ ન થઈ શક્યો. લિંક ચેક કરો.</span>";
+            });
+        }
+
+        function resetToSetup() {
+            document.getElementById('resultArea').style.display = 'none';
+            document.getElementById('setupArea').style.display = 'block';
+            document.getElementById('studentName').value = "";
+            document.getElementById('studentRoll').value = "";
+            document.getElementById('savingStatus').innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> વિદ્યાર્થીનો ડેટા ઓનલાઇન સુરક્ષિત સેવ થઈ રહ્યો છે...";
+        }
+
+        function speakMessage(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const ut = new SpeechSynthesisUtterance(text);
+                ut.lang = 'gu-IN';
+                window.speechSynthesis.speak(ut);
+            }
+        }
+    </script>
+</body>
+</html>
