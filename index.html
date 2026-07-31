@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>શાળા શૈક્ષણિક રમત સંગ્રહ</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; 
+            background-color: #f4f7fe; 
+            margin: 0; 
+            padding: 20px; 
+        }
+        h1 { color: #1a202c; font-size: 28px; margin-bottom: 5px; }
+        p.subtitle { color: #718096; font-size: 16px; margin-bottom: 30px; }
+        
+        .container { 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            flex-wrap: wrap; 
+            max-width: 950px;
+            margin: 0 auto;
+        }
+        .card { 
+            background: white; 
+            border-radius: 16px; 
+            padding: 25px 20px; 
+            width: 210px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); 
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        .icon { font-size: 45px; margin-bottom: 10px; }
+        .card h2 { font-size: 22px; color: #2d3748; margin: 5px 0 15px 0; }
+        .btn { 
+            display: inline-block; 
+            padding: 10px 18px; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            font-size: 15px;
+        }
+
+        /* ધોરણ અને વિભાગ મુજબ રંગ */
+        .std-6 { border-top: 6px solid #3182ce; }
+        .btn-6 { background-color: #3182ce; }
+        .btn-6:hover { background-color: #2b6cb0; }
+
+        .std-7 { border-top: 6px solid #805ad5; }
+        .btn-7 { background-color: #805ad5; }
+        .btn-7:hover { background-color: #6b46c1; }
+
+        .std-8 { border-top: 6px solid #d53f8c; }
+        .btn-8 { background-color: #d53f8c; }
+        .btn-8:hover { background-color: #b83280; }
+
+        .other { border-top: 6px solid #dd6b20; }
+        .btn-other { background-color: #dd6b20; }
+        .btn-other:hover { background-color: #c05621; }
+    </style>
+</head>
+<body>
+
+    <h1>🎮 શૈક્ષણિક રમત સંગ્રહ</h1>
+    <p class="subtitle">તમારું ધોરણ અથવા વિભાગ પસંદ કરો અને રમતા રમતા શીખો</p>
+
+    <div class="container">
+
+        <!-- ૧. ધોરણ ૬ -->
+        <div class="card std-6">
+            <div>
+                <div class="icon">📘</div>
+                <h2>ધોરણ ૬</h2>
+            </div>
+            <a href="./dhoran-6/index.html" class="btn btn-6">રમતો જુઓ</a>
+        </div>
+
+        <!-- ૨. ધોરણ ૭ -->
+        <div class="card std-7">
+            <div>
+                <div class="icon">📗</div>
+                <h2>ધોરણ ૭</h2>
+            </div>
+            <a href="./dhoran-7/index.html" class="btn btn-7">રમતો જુઓ</a>
+        </div>
+
+        <!-- ૩. ધોરણ ૮ -->
+        <div class="card std-8">
+            <div>
+                <div class="icon">🎓</div>
+                <h2>ધોરણ ૮</h2>
+            </div>
+            <a href="./dhoran-8/index.html" class="btn btn-8">રમતો જુઓ</a>
+        </div>
+
+        <!-- ૪. અન્ય રમતો -->
+        <div class="card other">
+            <div>
+                <div class="icon">🧩</div>
+                <h2>અન્ય રમતો</h2>
+            </div>
+            <a href="./other/index.html" class="btn btn-other">રમતો જુઓ</a>
+        </div>
+
+    </div>
+
+</body>
+</html>
