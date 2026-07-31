@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>શૈક્ષણિક ગેમ - ગણિત પેટર્નની રમત (ધોરણ ૬)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-blue: #1e88e5;
+            --dark-blue: #1565c0;
+            --body-bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Hind Vadodara', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .top-header {
+            background: linear-gradient(135deg, #1565c0, #1e88e5);
+            color: white; width: 100%; text-align: center; padding: 25px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        .top-header h1 { margin: 0 0 8px 0; font-size: 32px; font-weight: 700; }
+        
+        .creator-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 20px; border-radius: 50px;
+            font-size: 16px; font-weight: 600; display: inline-block;
+            margin-top: 5px; border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        
+        .main-container { width: 95%; max-width: 850px; padding: 25px 10px; box-sizing: border-box; }
+        
+        .panel-card {
+            background-color: var(--card-bg); border-radius: 14px; padding: 25px;
+            margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.03);
+            position: relative;
+        }
+        
+        .panel-title { font-size: 20px; font-weight: 700; color: var(--dark-blue); margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 16px; }
+        .form-control {
+            width: 100%; padding: 12px; font-size: 16px; border: 2px solid #cbd5e1;
+            border-radius: 8px; font-family: 'Hind Vadodara', sans-serif; box-sizing: border-box;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary-blue); }
+        
+        .outcome-box {
+            background-color: #f8fafc;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .pattern-btn {
+            background-color: #f1f5f9;
+            border: 2px dashed #94a3b8;
+            padding: 12px 8px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pattern-btn:hover {
+            background-color: #e2e8f0;
+            border-color: #64748b;
+        }
+
+        .pattern-btn.active {
+            background-color: #e0f2fe;
+            border-color: #0284c7;
+            color: #0369a1;
+            border-style: solid;
+        }
+
+        .pattern-btn.completed {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #15803d;
+            border-style: solid;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .number-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .num-box {
+            background-color: var(--card-bg);
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 15px 5px;
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.02);
+        }
+
+        .num-box:hover {
+            transform: scale(1.05);
+            border-color: #94a3b8;
+        }
+
+        .num-box.correct {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #15803d;
+            pointer-events: none;
+        }
+
+        .num-box.incorrect {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #b91c1c;
+        }
+
+        .action-btn {
+            display: block; width: 100%; border: none; padding: 14px; font-size: 18px;
+            font-weight: bold; border-radius: 8px; cursor: pointer; text-align: center;
+            font-family: 'Hind Vadodara', sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn-primary { background: var(--dark-blue); color: white; }
+        
+        .score-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; text-align: center; }
+        .score-card { border-radius: 10px; padding: 15px; font-size: 18px; font-weight: 700; }
+        
+        #setupArea, #gameArea, #resultArea { display: none; }
+        #setupArea { display: block; }
+        
+        .badge-info { background: #e0f2fe; color: #0369a1; padding: 5px 12px; border-radius: 6px; font-size: 14px; font-weight: bold; display: inline-block; margin-bottom: 15px; }
+
+        .timer-container {
+            width: 100%; background-color: #e2e8f0; height: 12px; border-radius: 10px;
+            margin-bottom: 20px; overflow: hidden;
+        }
+        .timer-bar {
+            height: 100%; width: 100%; background: linear-gradient(90deg, #4ade80, #ef4444);
+            transition: width 1s linear;
+        }
+        .timer-text { font-size: 16px; font-weight: bold; color: #ef4444; text-align: right; margin-bottom: 5px; }
+
+        .custom-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); display: flex; align-items: center;
+            justify-content: center; z-index: 10000; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .custom-modal.show { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background-color: white; padding: 30px; border-radius: 20px;
+            width: 90%; max-width: 450px; text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: translateY(-20px); transition: transform 0.3s ease;
+        }
+        .custom-modal.show .modal-content { transform: translateY(0); }
+        .modal-btn {
+            background-color: var(--primary-blue); color: white; border: none;
+            padding: 10px 25px; font-size: 16px; font-weight: bold; border-radius: 8px;
+            cursor: pointer; margin-top: 20px; font-family: 'Hind Vadodara', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="customModal" class="custom-modal">
+        <div class="modal-content">
+            <h2 id="modalIcon" style="font-size: 50px; margin: 0 0 10px 0;">⏰</h2>
+            <h2 id="modalTitle" style="margin: 0; color: #1565c0;">સમય પૂરો!</h2>
+            <p id="modalBody" style="font-size: 18px; margin: 15px 0 0 0; font-weight: 600;"></p>
+            <button class="modal-btn" onclick="closeModal()">ઓકે 👍</button>
+        </div>
+    </div>
+
+    <div class="top-header">
+        <h1>🎯 શૈક્ષણિક પ્રશ્નોત્તરી રમત</h1>
+        <div class="creator-info">
+            <i class="fa-solid fa-user-tie"></i> <b>CREATED BY:</b> TR. KETAN SOLANKI | 
+            <i class="fa-solid fa-school"></i> <b>SCHOOL:</b> RANGPUR PRI. SCHOOL, TA: VANSDA, DI: NAVSARI
+        </div>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="panel-card" id="setupArea">
+            <div class="panel-title"><i class="fa-solid fa-id-card"></i> બાળકની વિગત ભરો</div>
+            
+            <div class="badge-info">ધોરણ: ૬ | વિષય: ગણિત | પ્રકરણ: પેટર્નની રમત</div>
+
+            <div class="outcome-box">
+                <strong>🎯 અધ્યયન નિષ્પત્તિ (Learning Outcome):</strong><br>
+                વિદ્યાર્થીઓ વિવિધ પ્રકારની જટિલ પેટર્ન (એકી, બેકી, ત્રિકોણીય, ચોરસ, ઘન, વિરહંક સંખ્યાઓ તેમજ ૨ અને ૩ ની ઘાત વાળી સંખ્યાઓ) ઓળખી તેને ક્રમબદ્ધ (ચડતા ક્રમમાં) જૂથમાં વર્ગીકૃત કરી શકે.
+            </div>
+
+            <div class="form-group">
+                <label for="studentName"><i class="fa-solid fa-user"></i> વિદ્યાર્થીનું નામ લખો:</label>
+                <input type="text" id="studentName" class="form-control" placeholder="દા.ત. પ્રેરિત સોલંકી">
+            </div>
+
+            <div class="form-group">
+                <label for="studentRoll"><i class="fa-solid fa-list-ol"></i> રોલ નંબર / હાજરી નંબર:</label>
+                <input type="number" id="studentRoll" class="form-control" placeholder="દા.ત. 15">
+            </div>
+
+            <div style="margin-top: 25px;">
+                <button class="action-btn btn-primary" onclick="startGame()"><i class="fa-solid fa-play"></i> રમત શરૂ કરો</button>
+            </div>
+        </div>
+
+        <div id="gameArea">
+            <div class="panel-card">
+                <div id="timerWrapper">
+                    <div class="timer-text" id="timerCount">બાકી સમય: ૧ મિનિટ ૩૦ સેકન્ડ</div>
+                    <div class="timer-container" id="timerContainer">
+                        <div class="timer-bar" id="timerBar"></div>
+                    </div>
+                </div>
+
+                <div class="question-box" style="font-size: 19px; margin-bottom: 15px; text-align: left; color: #333; line-height: 1.6;">
+                    <strong>👉 સૂચના:</strong> પહેલા નીચે આપેલા ૮ બોક્સમાંથી કોઈપણ એક પેટર્ન પસંદ કરો. ત્યારબાદ નીચેની સંખ્યાઓમાંથી તે પેટર્નમાં આવતી બધી જ સંખ્યાઓ <strong>એકપછી એક ચડતા ક્રમમાં (નાનીથી મોટી)</strong> જ પસંદ કરો!
+                </div>
+                
+                <div class="pattern-grid" id="patternGrid"></div>
+
+                <div class="panel-title" style="font-size: 18px; margin-bottom: 10px;"><i class="fa-solid fa-arrow-down-9-1"></i> સંખ્યાઓ પસંદ કરો:</div>
+                <div class="number-grid" id="numberGrid"></div>
+            </div>
+
+            <div class="panel-card">
+                <div class="score-grid">
+                    <div class="score-card" style="background-color: #e8f5e9; color: #2e7d32;">સાચી સંખ્યાઓ: <span id="correctScore">0</span></div>
+                    <div class="score-card" style="background-color: #ffebee; color: #c62828;">ખોટા પ્રયત્ન: <span id="wrongScore">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-card" id="resultArea" style="text-align: center;">
+            <i class="fa-solid fa-trophy" style="font-size: 60px; color: #fbc02d; margin-bottom: 15px;"></i>
+            <h2 id="resultTitle">🏆 રમત પૂર્ણ થઈ ગઈ છે! 🏆</h2>
+            <h3 id="resultNameLabel" style="color: var(--dark-blue); margin: 5px 0 20px 0;">વિદ્યાર્થી: </h3>
+            
+            <div class="score-grid" style="max-width: 400px; margin: 0 auto 25px auto;">
+                <div class="score-card" style="background:#e0f2f1; font-size:22px;">કુલ સાચા: <span id="finalCorrect">0</span></div>
+                <div class="score-card" style="background:#eceff1; font-size:22px;">કુલ ખોટા: <span id="finalWrong">0</span></div>
+            </div>
+
+            <div id="savingStatus" style="font-weight: 600; color: #00796b; margin-bottom: 20px;">
+                <i class="fa-solid fa-spinner fa-spin"></i> વિદ્યાર્થીનો ડેટા ઓનલાઇન સુરક્ષિત સેવ થઈ રહ્યો છે...
+            </div>
+            
+            <button class="action-btn btn-primary" onclick="resetToSetup()" style="max-width: 300px; margin: 0 auto;"><i class="fa-solid fa-rotate-right"></i> નવી રમત શરૂ કરો</button>
+        </div>
+
+    </div>
+
+    <script>
+        // 🌟 નવી લિંક સફળતાપૂર્વક અપડેટ કરી દીધી છે
+        const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqk7lFtctZ4sINCieAGqBkv3msOyhXfSmuR5RlH7beX8YfJDJ0ZFKM7YZxIfTkWb5cEg/exec"; 
+
+        // 📊 દરેક પેટર્નના ગણિત નિયમો
+        const patternTypes = [
+            { id: "eki", name: "🔵 એકી સંખ્યા", check: (n) => n % 2 !== 0 && n <= 30 },
+            { id: "beki", name: "🟢 બેકી સંખ્યા", check: (n) => n % 2 === 0 && n <= 30 },
+            { id: "triangular", name: "📐 ત્રિકોણીય સંખ્યા", check: (n) => [1, 3, 6, 10, 15, 21, 28].includes(n) },
+            { id: "square", name: "⬛ ચોરસ સંખ્યા", check: (n) => [1, 4, 9, 16, 25].includes(n) },
+            { id: "cube", name: "📦 ઘન સંખ્યા", check: (n) => [1, 8, 27].includes(n) },
+            { id: "virahanka", name: "✨ વિરહંક સંખ્યાઓ", check: (n) => [1, 2, 3, 5, 8, 13, 21].includes(n) },
+            { id: "pow2", name: "⚡ 2 ની ઘાત", check: (n) => [1, 2, 4, 8, 16].includes(n) },
+            { id: "pow3", name: "🔥 3 ની ઘાત", check: (n) => [1, 3, 9, 27].includes(n) }
+        ];
+
+        const baseNumbers = Array.from({length: 30}, (_, i) => i + 1);
+        let gameNumbers = []; 
+        let currentPatternSequence = [];
+
+        let activePatternId = null;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let pCorrectCount = 0; 
+        let sName = "";
+        let sRoll = "";
+        
+        let timerInterval = null;
+        let timeLeft = 90; 
+        let isGameOver = false;
+
+        let patternScores = {
+            eki: 0, beki: 0, triangular: 0, square: 0,
+            cube: 0, virahanka: 0, pow2: 0, pow3: 0
+        };
+
+        // 🔊 સંપૂર્ણ સુધારેલી વોઇસ સિસ્ટમ (Gujarati Voice Support)
+        let synth = window.speechSynthesis;
+        let selectedVoice = null;
+
+        function loadVoices() {
+            if ('speechSynthesis' in window) {
+                let voices = synth.getVoices();
+                // ગુજરાતી વોઇસ શોધવો અથવા હિન્દી/ઇન્ડિયન એકસેન્ટ સપોર્ટ
+                selectedVoice = voices.find(v => v.lang.includes('gu') || v.lang.includes('GU')) ||
+                                voices.find(v => v.lang.includes('hi') || v.lang.includes('HI')) || null;
+            }
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+            loadVoices();
+        }
+
+        function speakMessage(text) {
+            if (!text || !('speechSynthesis' in window)) return;
+            
+            synth.cancel(); // અગાઉના અવાજને અટકાવવો
+            
+            const ut = new SpeechSynthesisUtterance(text);
+            ut.lang = 'gu-IN';
+            ut.rate = 0.9; // સ્પષ્ટ અવાજ માટે
+            
+            if (selectedVoice) {
+                ut.voice = selectedVoice;
+            }
+            
+            synth.speak(ut);
+        }
+
+        function startGame() {
+            sName = document.getElementById('studentName').value.trim();
+            sRoll = document.getElementById('studentRoll').value.trim();
+
+            if (!sName) {
+                alert("કૃપા કરીને પહેલા વિદ્યાર્થીનું નામ લખો!");
+                return;
+            }
+            if (!sRoll) {
+                alert("કૃપા કરીને વિદ્યાર્થીનો રોલ નંબર લખો!");
+                return;
+            }
+
+            // બ્રાઉઝરમાં ઓડિયો પરમિશન ઓન કરવા માટે પ્રથમ વોઇસ
+            speakMessage("રમત શરૂ થાય છે");
+
+            isGameOver = false;
+            activePatternId = null;
+            correctCount = 0;
+            wrongCount = 0;
+            
+            patternScores = {
+                eki: 0, beki: 0, triangular: 0, square: 0,
+                cube: 0, virahanka: 0, pow2: 0, pow3: 0
+            };
+
+            document.getElementById('correctScore').textContent = "0";
+            document.getElementById('wrongScore').textContent = "0";
+            
+            initPatterns();
+
+            document.getElementById('setupArea').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+        }
+
+        function initPatterns() {
+            const grid = document.getElementById('patternGrid');
+            grid.innerHTML = '';
+            patternTypes.forEach(p => {
+                const btn = document.createElement('div');
+                btn.className = 'pattern-btn';
+                btn.id = `btn-${p.id}`;
+                btn.textContent = p.name;
+                btn.onclick = () => selectPattern(p.id);
+                grid.appendChild(btn);
+            });
+        }
+
+        function generateNumbersForPattern(pId) {
+            const currentPattern = patternTypes.find(p => p.id === pId);
+            
+            let correctNumbers = baseNumbers.filter(n => currentPattern.check(n)).sort((a, b) => a - b);
+            currentPatternSequence = [...correctNumbers];
+
+            let wrongNumbers = baseNumbers.filter(n => !currentPattern.check(n));
+            let shuffledWrong = [...wrongNumbers].sort(() => Math.random() - 0.5);
+
+            let neededWrongCount = Math.max(8, 24 - correctNumbers.length);
+            let selectedWrong = shuffledWrong.slice(0, neededWrongCount);
+
+            gameNumbers = [...correctNumbers, ...selectedWrong].sort(() => Math.random() - 0.5);
+
+            renderNumbers();
+        }
+
+        function renderNumbers() {
+            const grid = document.getElementById('numberGrid');
+            grid.innerHTML = '';
+            
+            gameNumbers.forEach(num => {
+                const box = document.createElement('div');
+                box.className = 'num-box';
+                box.id = `num-${num}`;
+                box.textContent = num;
+                box.onclick = () => checkNumberClick(num, box);
+                grid.appendChild(box);
+            });
+        }
+
+        function selectPattern(pId) {
+            if (isGameOver) return;
+            
+            clearInterval(timerInterval);
+
+            document.querySelectorAll('.pattern-btn').forEach(b => {
+                if (!b.classList.contains('completed')) b.className = 'pattern-btn';
+            });
+
+            activePatternId = pId;
+            pCorrectCount = 0; 
+            
+            generateNumbersForPattern(pId);
+
+            document.getElementById(`btn-${pId}`).classList.add('active');
+            
+            startPatternTimer();
+            speakMessage("આ પેટર્નની સંખ્યાઓ ચડતા ક્રમમાં પસંદ કરો");
+        }
+
+        function startPatternTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 90;
+            const bar = document.getElementById('timerBar');
+            bar.style.width = "100%";
+            
+            updateTimerUI();
+
+            timerInterval = setInterval(() => {
+                if (isGameOver) { clearInterval(timerInterval); return; }
+                timeLeft--;
+                
+                bar.style.width = ((timeLeft / 90) * 100) + "%";
+                updateTimerUI();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timeOutPattern();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            const countText = document.getElementById('timerCount');
+            let min = Math.floor(timeLeft / 60);
+            let sec = timeLeft % 60;
+            countText.textContent = `બાકી સમય: ${min} મિનિટ ${sec < 10 ? '૦' + sec : sec} સેકન્ડ`;
+        }
+
+        function timeOutPattern() {
+            speakMessage("સમય પૂરો થઈ ગયો છે");
+            const currentPattern = patternTypes.find(p => p.id === activePatternId);
+            let totalCorrectInPattern = baseNumbers.filter(n => currentPattern.check(n)).length;
+
+            showModal("⏰", "સમય પૂરો થયો!", `પેટર્ન પૂર્ણ કરવાનો સમય પૂરો થઈ ગયો છે.<br>તમે આ પેટર્ન માટે <strong>${totalCorrectInPattern}</strong> માંથી <strong>${pCorrectCount}</strong> સંખ્યાઓ સાચી શોધી!`);
+            
+            const pBtn = document.getElementById(`btn-${activePatternId}`);
+            pBtn.className = 'pattern-btn completed';
+            pBtn.style.backgroundColor = '#fed7d7'; 
+            pBtn.textContent = pBtn.textContent + " ❌";
+            activePatternId = null;
+
+            checkGameFinished();
+        }
+
+        function checkNumberClick(num, element) {
+            if (isGameOver) return;
+            if (!activePatternId) {
+                alert("કૃપા કરીને પહેલા ઉપરથી કોઈ એક પેટર્ન પસંદ કરો!");
+                return;
+            }
+            if (element.classList.contains('correct')) return;
+
+            const expectedNextNumber = currentPatternSequence[0];
+
+            if (num === expectedNextNumber) {
+                element.className = 'num-box correct';
+                correctCount++;
+                pCorrectCount++;
+                
+                currentPatternSequence.shift();
+                patternScores[activePatternId] = pCorrectCount;
+
+                document.getElementById('correctScore').textContent = correctCount;
+                speakMessage("સાચો જવાબ");
+                checkIfPatternCompleted();
+            } else {
+                element.classList.add('incorrect');
+                wrongCount++;
+                document.getElementById('wrongScore').textContent = wrongCount;
+                
+                const currentPattern = patternTypes.find(p => p.id === activePatternId);
+                if (currentPattern.check(num)) {
+                    speakMessage("નાની સંખ્યા પસંદ કરો");
+                } else {
+                    speakMessage("ખોટો જવાબ");
+                }
+                
+                setTimeout(() => { element.classList.remove('incorrect'); }, 800);
+            }
+        }
+
+        function checkIfPatternCompleted() {
+            if (currentPatternSequence.length === 0) {
+                clearInterval(timerInterval); 
+                
+                const pBtn = document.getElementById(`btn-${activePatternId}`);
+                pBtn.className = 'pattern-btn completed';
+                pBtn.textContent = pBtn.textContent + " ✅";
+                
+                speakMessage("અભિનંદન!");
+                showModal("🎉", "Congratulations!", "અદ્ભુત! તમે આ પેટર્નની તમામ શ્રેણીબદ્ધ સંખ્યાઓ ક્રમબદ્ધ રીતે શોધી લીધી છે!");
+                
+                activePatternId = null;
+                checkGameFinished();
+            }
+        }
+
+        function checkGameFinished() {
+            const completedCount = document.querySelectorAll('.pattern-btn.completed').length;
+            if (completedCount === patternTypes.length) {
+                isGameOver = true;
+                clearInterval(timerInterval);
+                document.getElementById('resultTitle').textContent = "🏆 ગેમ પૂર્ણ થઈ ગઈ છે! 🏆";
+                setTimeout(finishGame, 1500);
+            }
+        }
+
+        function showModal(icon, title, bodyHTML) {
+            document.getElementById('modalIcon').textContent = icon;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = bodyHTML;
+            document.getElementById('customModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').classList.remove('show');
+        }
+
+        function finishGame() {
+            clearInterval(timerInterval);
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block';
+            
+            document.getElementById('resultNameLabel').textContent = `વિદ્યાર્થી: ${sName} (હાજરી નં: ${sRoll})`;
+            document.getElementById('finalCorrect').textContent = correctCount;
+            document.getElementById('finalWrong').textContent = wrongCount;
+            
+            if (correctCount > 0) {
+                speakMessage("અભિનંદન તમે રમત પૂર્ણ કરી લીધી છે");
+            }
+            saveDataToGoogleSheet();
+        }
+
+        function saveDataToGoogleSheet() {
+            const statusDiv = document.getElementById('savingStatus');
+            const payload = {
+                timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}),
+                studentName: sName,
+                rollNumber: sRoll,
+                eki: patternScores.eki,
+                beki: patternScores.beki,
+                triangular: patternScores.triangular,
+                square: patternScores.square,
+                cube: patternScores.cube,
+                virahanka: patternScores.virahanka, 
+                pow2: patternScores.pow2,
+                pow3: patternScores.pow3,
+                totalCorrect: correctCount,
+                totalWrong: wrongCount
+            };
+            
+            fetch(GOOGLE_SHEET_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => { statusDiv.innerHTML = "<span style='color:#2e7d32;'><i class='fa-solid fa-cloud-check'></i> ડેટા સેવ થઈ ગયો! ✅</span>"; })
+            .catch(() => { statusDiv.innerHTML = "<span style='color:#c62828;'><i class='fa-solid fa-triangle-exclamation'></i> ડેટા સેવ ન થઈ શક્યો.</span>"; });
+        }
+
+        function resetToSetup() {
+            document.getElementById('resultArea').style.display = 'none';
+            document.getElementById('setupArea').style.display = 'block';
+            document.getElementById('studentName').value = "";
+            document.getElementById('studentRoll').value = "";
+        }
+    </script>
+</body>
+</html>
