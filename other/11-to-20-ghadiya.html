@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>શૈક્ષણિક ગેમ - ઘડિયાની રમત (૧૧ થી ૨૦)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-blue: #1e88e5;
+            --dark-blue: #1565c0;
+            --body-bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Hind Vadodara', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .top-header {
+            background: linear-gradient(135deg, #1565c0, #1e88e5);
+            color: white; width: 100%; text-align: center; padding: 25px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        .top-header h1 { margin: 0 0 8px 0; font-size: 32px; font-weight: 700; }
+        
+        .creator-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 20px; border-radius: 50px;
+            font-size: 16px; font-weight: 600; display: inline-block;
+            margin-top: 5px; border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        
+        .main-container { width: 95%; max-width: 850px; padding: 25px 10px; box-sizing: border-box; }
+        
+        .panel-card {
+            background-color: var(--card-bg); border-radius: 14px; padding: 25px;
+            margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.03);
+            position: relative;
+        }
+        
+        .panel-title { font-size: 20px; font-weight: 700; color: var(--dark-blue); margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 16px; }
+        .form-control {
+            width: 100%; padding: 12px; font-size: 16px; border: 2px solid #cbd5e1;
+            border-radius: 8px; font-family: 'Hind Vadodara', sans-serif; box-sizing: border-box;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary-blue); }
+        
+        .math-question-box {
+            background: #e0f2fe; color: #0369a1; text-align: center;
+            font-size: 36px; font-weight: 700; padding: 15px;
+            border-radius: 12px; margin-bottom: 25px; border: 2px solid #bae6fd;
+        }
+
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 500px) {
+            .pattern-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .pattern-btn {
+            background-color: #f1f5f9; border: 2px dashed #94a3b8;
+            padding: 12px 5px; border-radius: 10px; font-size: 16px;
+            font-weight: bold; text-align: center; cursor: pointer; transition: all 0.2s;
+        }
+
+        .pattern-btn:hover { background-color: #e2e8f0; border-color: #64748b; }
+        .pattern-btn.active { background-color: #e0f2fe; border-color: #0284c7; color: #0369a1; border-style: solid; }
+        .pattern-btn.completed { background-color: #dcfce7; border-color: #22c55e; color: #15803d; border-style: solid; pointer-events: none; opacity: 0.8; }
+
+        .number-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 15px;
+        }
+
+        .num-box {
+            background-color: var(--card-bg); border: 2px solid #cbd5e1; border-radius: 10px;
+            padding: 15px 5px; font-size: 24px; font-weight: 700; text-align: center;
+            cursor: pointer; transition: all 0.2s; box-shadow: 0 3px 6px rgba(0,0,0,0.02);
+        }
+
+        .num-box:hover { transform: scale(1.05); border-color: #94a3b8; }
+        .num-box.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #15803d; pointer-events: none; }
+        .num-box.incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #b91c1c; }
+
+        .action-btn {
+            display: block; width: 100%; border: none; padding: 14px; font-size: 18px;
+            font-weight: bold; border-radius: 8px; cursor: pointer; text-align: center;
+            font-family: 'Hind Vadodara', sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn-primary { background: var(--dark-blue); color: white; }
+        
+        .score-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; text-align: center; }
+        .score-card { border-radius: 10px; padding: 15px; font-size: 18px; font-weight: 700; }
+        
+        #setupArea, #gameArea, #resultArea { display: none; }
+        #setupArea { display: block; }
+        
+        .timer-container {
+            width: 100%; background-color: #e2e8f0; height: 12px; border-radius: 10px;
+            margin-bottom: 20px; overflow: hidden;
+        }
+        .timer-bar {
+            height: 100%; width: 100%; background: linear-gradient(90deg, #4ade80, #ef4444);
+            transition: width 1s linear;
+        }
+        .timer-text { font-size: 16px; font-weight: bold; color: #ef4444; text-align: right; margin-bottom: 5px; }
+
+        .custom-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); display: flex; align-items: center;
+            justify-content: center; z-index: 10000; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .custom-modal.show { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background-color: white; padding: 30px; border-radius: 20px;
+            width: 90%; max-width: 450px; text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: translateY(-20px); transition: transform 0.3s ease;
+        }
+        .custom-modal.show .modal-content { transform: translateY(0); }
+        .modal-btn {
+            background-color: var(--primary-blue); color: white; border: none;
+            padding: 10px 25px; font-size: 16px; font-weight: bold; border-radius: 8px;
+            cursor: pointer; margin-top: 20px; font-family: 'Hind Vadodara', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="customModal" class="custom-modal">
+        <div class="modal-content">
+            <h2 id="modalIcon" style="font-size: 50px; margin: 0 0 10px 0;">⏰</h2>
+            <h2 id="modalTitle" style="margin: 0; color: #1565c0;">સમય પૂરો!</h2>
+            <p id="modalBody" style="font-size: 18px; margin: 15px 0 0 0; font-weight: 600;"></p>
+            <button class="modal-btn" onclick="closeModal()">ઓકે 👍</button>
+        </div>
+    </div>
+
+    <div class="top-header">
+        <h1>🎯 શૈક્ષણિક પ્રશ્નોત્તરી - ઘડિયાની રમત (૧૧ થી ૨૦)</h1>
+        <div class="creator-info">
+            <i class="fa-solid fa-user-tie"></i> <b>CREATED BY:</b> TR. KETAN SOLANKI | 
+            <i class="fa-solid fa-school"></i> <b>SCHOOL:</b> RANGPUR PRI. SCHOOL, TA: VANSDA, DI: NAVSARI
+        </div>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="panel-card" id="setupArea">
+            <div class="panel-title"><i class="fa-solid fa-id-card"></i> વિદ્યાર્થીની વિગત ભરો</div>
+            
+            <div class="form-group">
+                <label for="studentStd"><i class="fa-solid fa-graduation-cap"></i> ધોરણ પસંદ કરો:</label>
+                <select id="studentStd" class="form-control">
+                    <option value="">-- ધોરણ સિલેક્ટ કરો --</option>
+                    <option value="1">ધોરણ - ૧</option>
+                    <option value="2">ધોરણ - ૨</option>
+                    <option value="3">ધોરણ - ૩</option>
+                    <option value="4">ધોરણ - ૪</option>
+                    <option value="5">ધોરણ - ૫</option>
+                    <option value="6">ધોરણ - ૬</option>
+                    <option value="7">ધોરણ - ૭</option>
+                    <option value="8">ધોરણ - ૮</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="studentName"><i class="fa-solid fa-user"></i> વિદ્યાર્થીનું નામ લખો:</label>
+                <input type="text" id="studentName" class="form-control" placeholder="દા.ત. પ્રેરિત સોલંકી">
+            </div>
+
+            <div class="form-group">
+                <label for="studentRoll"><i class="fa-solid fa-list-ol"></i> રોલ નંબર / હાજરી નંબર:</label>
+                <input type="number" id="studentRoll" class="form-control" placeholder="દા.ત. 15">
+            </div>
+
+            <div style="margin-top: 25px;">
+                <button class="action-btn btn-primary" onclick="startGame()"><i class="fa-solid fa-play"></i> રમત શરૂ કરો</button>
+            </div>
+        </div>
+
+        <div id="gameArea">
+            <div class="panel-card">
+                <div id="timerWrapper">
+                    <div class="timer-text" id="timerCount">બાકી સમય: ૧ મિનિટ ૩૦ સેકન્ડ</div>
+                    <div class="timer-container" id="timerContainer">
+                        <div class="timer-bar" id="timerBar"></div>
+                    </div>
+                </div>
+
+                <div class="panel-title" style="font-size: 18px; margin-bottom: 10px;"><i class="fa-solid fa-calculator"></i> પહેલા ઘડિયો પસંદ કરો:</div>
+                <div class="pattern-grid" id="patternGrid"></div>
+
+                <div id="questionDisplay" class="math-question-box" style="display:none;">૧૧ × ૧ = ?</div>
+
+                <div class="panel-title" id="numTitle" style="font-size: 18px; margin-bottom: 10px; display:none;"><i class="fa-solid fa-arrow-down-9-1"></i> સાચો જવાબ પસંદ કરો:</div>
+                <div class="number-grid" id="numberGrid"></div>
+            </div>
+
+            <div class="panel-card">
+                <div class="score-grid">
+                    <div class="score-card" style="background-color: #e8f5e9; color: #2e7d32;">સાચા જવાબ: <span id="correctScore">0</span></div>
+                    <div class="score-card" style="background-color: #ffebee; color: #c62828;">ખોટા પ્રયત્ન: <span id="wrongScore">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-card" id="resultArea" style="text-align: center;">
+            <i class="fa-solid fa-trophy" style="font-size: 60px; color: #fbc02d; margin-bottom: 15px;"></i>
+            <h2 id="resultTitle">🏆 રમત પૂર્ણ થઈ ગઈ છે! 🏆</h2>
+            <h3 id="resultNameLabel" style="color: var(--dark-blue); margin: 5px 0 5px 0;">વિદ્યાર્થી: </h3>
+            <h4 id="resultStdLabel" style="color: #555; margin: 0 0 20px 0;">ધોરણ: </h4>
+            
+            <div class="score-grid" style="max-width: 400px; margin: 0 auto 25px auto;">
+                <div class="score-card" style="background:#e0f2f1; font-size:22px;">કુલ સાચા: <span id="finalCorrect">0</span></div>
+                <div class="score-card" style="background:#eceff1; font-size:22px;">કુલ ખોટા: <span id="finalWrong">0</span></div>
+            </div>
+
+            <div id="savingStatus" style="font-weight: 600; color: #00796b; margin-bottom: 20px;">
+                <i class="fa-solid fa-spinner fa-spin"></i> ડેટા ઓનલાઇન સુરક્ષિત સેવ થઈ રહ્યો છે...
+            </div>
+            
+            <button class="action-btn btn-primary" onclick="resetToSetup()" style="max-width: 300px; margin: 0 auto;"><i class="fa-solid fa-rotate-right"></i> નવી રમત શરૂ કરો</button>
+        </div>
+
+    </div>
+
+    <script>
+        // 🌟 તમારી નવી ૧૧ થી ૨૦ ની સેવિંગ લિંક અહીં સેટ કરી દીધી છે
+        const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwZZJ6CHfCOlKZTNCozslJGpHjblC7XCxC8x5ey_dSUZ2IaOpj1eemyGFwNnFGYkGL/exec"; 
+
+        let selectedTable = null;
+        let currentStep = 1; 
+        let correctCount = 0;
+        let wrongCount = 0;
+        let pCorrectCount = 0;
+        let sName = "", sRoll = "", sStd = "";
+        
+        let timerInterval = null;
+        let timeLeft = 90; 
+        let isGameOver = false;
+
+        // ૧૧ થી ૨૦ ઘડિયાના ટ્રેકિંગ સ્કોર ઓબ્જેક્ટ
+        let tableScores = { t11:0, t12:0, t13:0, t14:0, t15:0, t16:0, t17:0, t18:0, t19:0, t20:0 };
+
+        function startGame() {
+            sStd = document.getElementById('studentStd').value;
+            sName = document.getElementById('studentName').value.trim();
+            sRoll = document.getElementById('studentRoll').value.trim();
+
+            if (!sStd) { alert("કૃપા કરીને પહેલા ધોરણ પસંદ કરો!"); return; }
+            if (!sName) { alert("કૃપા કરીને પહેલા વિદ્યાર્થીનું નામ લખો!"); return; }
+
+            speakMessage(""); 
+            isGameOver = false;
+            selectedTable = null;
+            correctCount = 0; wrongCount = 0;
+            tableScores = { t11:0, t12:0, t13:0, t14:0, t15:0, t16:0, t17:0, t18:0, t19:0, t20:0 };
+
+            document.getElementById('correctScore').textContent = "0";
+            document.getElementById('wrongScore').textContent = "0";
+            
+            initTableButtons();
+            document.getElementById('numberGrid').innerHTML = '';
+            document.getElementById('questionDisplay').style.display = 'none';
+            document.getElementById('numTitle').style.display = 'none';
+
+            document.getElementById('setupArea').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+        }
+
+        function initTableButtons() {
+            const grid = document.getElementById('patternGrid');
+            grid.innerHTML = '';
+            for (let i = 11; i <= 20; i++) {
+                const btn = document.createElement('div');
+                btn.className = 'pattern-btn';
+                btn.id = `btn-t${i}`;
+                btn.textContent = `${i} નો ઘડિયો`;
+                btn.onclick = () => selectTable(i);
+                grid.appendChild(btn);
+            }
+        }
+
+        function selectTable(tableNum) {
+            if (isGameOver) return;
+            clearInterval(timerInterval);
+
+            document.querySelectorAll('.pattern-btn').forEach(b => {
+                if (!b.classList.contains('completed')) b.className = 'pattern-btn';
+            });
+
+            selectedTable = tableNum;
+            currentStep = 1; 
+            pCorrectCount = 0;
+
+            document.getElementById(`btn-t${tableNum}`).classList.add('active');
+            document.getElementById('questionDisplay').style.display = 'block';
+            document.getElementById('numTitle').style.display = 'block';
+
+            showQuestion();
+            generateTableNumbers();
+            startTimer();
+            speakMessage(`${tableNum} નો ઘડિયો શરૂ થયો`);
+        }
+
+        function showQuestion() {
+            document.getElementById('questionDisplay').textContent = `${selectedTable} × ${currentStep} = ?`;
+        }
+        
+        function generateTableNumbers() {
+            let correctAnswers = [];
+            for(let i=1; i<=10; i++) { correctAnswers.push(selectedTable * i); }
+
+            let extraWrong = [];
+            while(extraWrong.length < 10) {
+                let rand = Math.floor(Math.random() * (selectedTable * 10 + 15)) + 1;
+                if(!correctAnswers.includes(rand) && !extraWrong.includes(rand)) {
+                    extraWrong.push(rand);
+                }
+            }
+
+            let finalGridPool = correctAnswers.concat(extraWrong);
+            renderGrid(finalGridPool);
+        }
+
+        function renderGrid(pool) {
+            const grid = document.getElementById('numberGrid');
+            grid.innerHTML = '';
+            let shuffled = pool.sort(() => Math.random() - 0.5);
+            
+            shuffled.forEach(num => {
+                const box = document.createElement('div');
+                box.className = 'num-box';
+                box.id = `num-${num}`;
+                box.textContent = num;
+                box.onclick = () => checkAnswer(num, box);
+                grid.appendChild(box);
+            });
+        }
+
+        function checkAnswer(clickedNum, element) {
+            if (isGameOver || !selectedTable) return;
+
+            let correctAns = selectedTable * currentStep;
+
+            if (clickedNum === correctAns) {
+                element.className = 'num-box correct';
+                correctCount++;
+                pCorrectCount++;
+                
+                tableScores[`t${selectedTable}`] = pCorrectCount;
+                document.getElementById('correctScore').textContent = correctCount;
+                speakMessage("સાચો જવાબ");
+
+                if (currentStep < 10) {
+                    currentStep++;
+                    showQuestion();
+                } else {
+                    clearInterval(timerInterval);
+                    const pBtn = document.getElementById(`btn-t${selectedTable}`);
+                    pBtn.className = 'pattern-btn completed';
+                    pBtn.textContent = `${selectedTable} નો ઘડિયો ✅`;
+                    
+                    document.getElementById('questionDisplay').style.display = 'none';
+                    document.getElementById('numTitle').style.display = 'none';
+                    document.getElementById('numberGrid').innerHTML = '';
+                    
+                    speakMessage("અભિનંદન ઘડિયો પૂર્ણ થયો");
+                    showModal("🎉", "Congratulations!", `અદ્ભુત! તમે ${selectedTable} નો આખો ઘડિયો સમયસર ક્રમમાં સાચો પૂર્ણ કર્યો છે!`);
+                    selectedTable = null;
+                    checkGameFinished();
+                }
+            } else {
+                element.classList.add('incorrect');
+                wrongCount++;
+                document.getElementById('wrongScore').textContent = wrongCount;
+                speakMessage("ખોટો જવાબ");
+                setTimeout(() => { element.classList.remove('incorrect'); }, 800);
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 90;
+            const bar = document.getElementById('timerBar');
+            bar.style.width = "100%";
+            updateTimerUI();
+
+            timerInterval = setInterval(() => {
+                if (isGameOver) { clearInterval(timerInterval); return; }
+                timeLeft--;
+                bar.style.width = ((timeLeft / 90) * 100) + "%";
+                updateTimerUI();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timeOutTable();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            const countText = document.getElementById('timerCount');
+            let min = Math.floor(timeLeft / 60);
+            let sec = timeLeft % 60;
+            countText.textContent = `બાકી સમય: ${min} મિનિટ ${sec < 10 ? '૦' + sec : sec} સેકન્ડ`;
+        }
+
+        function timeOutTable() {
+            speakMessage("સમય પૂરો");
+            showModal("⏰", "સમય પૂરો થયો!", `${selectedTable} ના ઘડિયા માટેનો સમય પૂરો થઈ ગયો છે.<br>તમે આ ઘડિયામાં ૧૦ માંથી <strong>${pCorrectCount}</strong> સાચા જવાબો આપ્યા!`);
+            
+            const pBtn = document.getElementById(`btn-t${selectedTable}`);
+            pBtn.className = 'pattern-btn completed';
+            pBtn.style.backgroundColor = '#fed7d7'; 
+            pBtn.textContent = `${selectedTable} નો ઘડિયો ❌`;
+            
+            document.getElementById('questionDisplay').style.display = 'none';
+            document.getElementById('numTitle').style.display = 'none';
+            document.getElementById('numberGrid').innerHTML = '';
+            selectedTable = null;
+            checkGameFinished();
+        }
+
+        function checkGameFinished() {
+            const completedCount = document.querySelectorAll('.pattern-btn.completed').length;
+            if (completedCount === 10) {
+                isGameOver = true;
+                document.getElementById('resultTitle').textContent = "🏆 બહુ સરસ! બધા ઘડિયા પૂર્ણ થયા! 🏆";
+                setTimeout(finishGame, 1500);
+            }
+        }
+
+        function showModal(icon, title, bodyHTML) {
+            document.getElementById('modalIcon').textContent = icon;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = bodyHTML;
+            document.getElementById('customModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').classList.remove('show');
+        }
+
+        function finishGame() {
+            clearInterval(timerInterval);
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block';
+            
+            document.getElementById('resultNameLabel').textContent = `વિદ્યાર્થી: ${sName} (હાજરી નં: ${sRoll})`;
+            document.getElementById('resultStdLabel').textContent = `ધોરણ: ${sStd}`;
+            document.getElementById('finalCorrect').textContent = correctCount;
+            document.getElementById('finalWrong').textContent = wrongCount;
+            
+            speakMessage("રમત પૂર્ણ થઈ ગઈ છે");
+            saveDataToGoogleSheet();
+        }
+
+        function saveDataToGoogleSheet() {
+            const statusDiv = document.getElementById('savingStatus');
+            const payload = {
+                timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}),
+                studentName: sName,
+                rollNumber: sRoll,
+                standard: sStd, 
+                t11: tableScores.t11, t12: tableScores.t12, t13: tableScores.t13, t14: tableScores.t14,
+                t15: tableScores.t15, t16: tableScores.t16, t17: tableScores.t17, t18: tableScores.t18,
+                t19: tableScores.t19, t20: tableScores.t20,
+                totalCorrect: correctCount,
+                totalWrong: wrongCount
+            };
+            
+            fetch(GOOGLE_SHEET_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => { statusDiv.innerHTML = "<span style='color:#2e7d32;'><i class='fa-solid fa-cloud-check'></i> ડેટા ધોરણ મુજબ ઓનલાઇન સેવ થઈ ગયો! ✅</span>"; })
+            .catch(() => { statusDiv.innerHTML = "<span style='color:#c62828;'><i class='fa-solid fa-triangle-exclamation'></i> ડેટા સેવ ન થઈ શક્યો.</span>"; });
+        }
+
+        function resetToSetup() {
+            document.getElementById('resultArea').style.display = 'none';
+            document.getElementById('setupArea').style.display = 'block';
+            document.getElementById('studentName').value = "";
+            document.getElementById('studentRoll').value = "";
+            document.getElementById('studentStd').value = "";
+        }
+
+        function speakMessage(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                if(text === "") return;
+                const ut = new SpeechSynthesisUtterance(text);
+                ut.lang = 'gu-IN';
+                window.speechSynthesis.speak(ut);
+            }
+        }
+    </script>
+</body>
+</html>
