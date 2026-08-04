@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ધોરણ ૮ - ગણન સ્તર મૂલ્યાંકન રમતોત્સવ</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #0284c7;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-grad: linear-gradient(135deg, #3b82f6 0%, #1e1b4b 100%);
+            --card-bg: #ffffff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Gujarati';
+            background: var(--bg-grad);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 950px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            padding: 30px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px dashed #cbd5e1;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .header h1 { color: #1e293b; margin: 0; font-size: 26px; }
+        .header h2 { color: #475569; margin: 5px 0; font-size: 18px; }
+        .header h3 { color: #64748b; margin: 5px 0; font-size: 16px; }
+        
+        .creator-tag {
+            display: inline-block;
+            background: #e0e7ff;
+            color: var(--primary);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 8px;
+            border: 1px solid #c7d2fe;
+        }
+
+        .admin-btn-top {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .admin-btn-top:hover { background: #0f172a; }
+
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group { text-align: left; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: #334155; font-size: 14px; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 15px;
+            background: #f8fafc;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .btn-start {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            transition: 0.2s;
+        }
+        .btn-start:hover { background: var(--primary-hover); }
+
+        .q-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        
+        .q-tag {
+            background: #dbeafe;
+            color: #1e40af;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+
+        .q-text { font-size: 16px; font-weight: 600; color: #1e293b; }
+        .ans-box { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+        .input-row { display: flex; align-items: center; gap: 8px; }
+        
+        .ans-input {
+            width: 110px;
+            padding: 8px 10px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .ans-input:disabled {
+            background-color: #e2e8f0;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        .check-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .check-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .chance-text {
+            font-size: 11px;
+            font-weight: bold;
+            color: #64748b;
+        }
+
+        .status-badge {
+            font-size: 18px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .correct { background: #d1fae5; color: var(--success); font-weight: bold; }
+        .wrong { background: #fee2e2; color: var(--danger); font-weight: bold; }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            flex: 1;
+            padding: 13px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            text-align: center;
+            min-width: 160px;
+            transition: 0.2s;
+        }
+        .btn-submit { background: var(--primary); }
+        .btn-excel { background: #16a34a; }
+        .btn-print { background: #475569; }
+        .btn:hover { opacity: 0.9; }
+
+        .report-box {
+            margin-top: 25px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .report-table th, .report-table td {
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+            font-size: 14px;
+        }
+        .report-table th { background: #e0e7ff; color: #3730a3; }
+
+        .kc-alert {
+            background: #fffbe3;
+            border-left: 4px solid var(--warning);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: 500;
+            color: #92400e;
+        }
+
+        /* Modal / Teacher Admin Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.75);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 850px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 25px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .main-container { box-shadow: none; max-width: 100%; border-radius: 0; padding: 0; }
+            .btn-group, #startScreen, .ans-input, button, .admin-btn-top, .check-btn { display: none !important; }
+            .report-box { display: block !important; border: 1px solid #000; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <button class="admin-btn-top" onclick="openAdminModal()">🔐 શિક્ષક પેનલ</button>
+
+    <!-- Header Area -->
+    <div class="header">
+        <h1>🏫 રંગપુર પ્રા.શાળા, તા: વાંસદા, જિ: નવસારી</h1>
+        <h2>ધોરણ: ૮ | વિષય: ગણન મૂલ્યાંકન રમતોત્સવ</h2>
+        <div class="creator-tag">Created By: TR. KETAN SOLANKI</div>
+    </div>
+
+    <!-- 1. START SCREEN -->
+    <div id="startScreen" class="screen active">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h3>🎮 ગણન ચકાસણી: વિદ્યાર્થી નોંધણી & ટેસ્ટ પસંદગી</h3>
+            <p style="color: #64748b; font-size: 14px;">તમારી વિગતો ભરો અને ત્રણેય સ્તરના ૫૦ ટેસ્ટ સેટમાંથી ગમે તે પસંદ કરો:</p>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="studentName">👤 વિદ્યાર્થીનું પૂરું નામ:</label>
+                <input type="text" id="studentName" placeholder="નામ લખો...">
+            </div>
+            <div class="form-group">
+                <label for="rollNo">🔢 રોલ નંબર:</label>
+                <input type="number" id="rollNo" placeholder="રોલ નં...">
+            </div>
+            <div class="form-group">
+                <label for="levelSelect" onchange="updateSetOptions()">🎯 ગણન સ્તર (Dropbox):</label>
+                <select id="levelSelect">
+                    <option value="easy">🟢 સ્તર ૧: સરળ (Basic - ૧ તક)</option>
+                    <option value="medium">🟡 સ્તર ૨: મધ્યમ (Intermediate - ૩ તક)</option>
+                    <option value="hard">🔴 સ્તર ૩: અઘરું (Advanced - ૩ તક)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="setSelect">📄 ટેસ્ટ પેપર સેટ (૧ થી ૫૦):</label>
+                <select id="setSelect">
+                    <!-- Populated via JavaScript dynamically for 50 sets -->
+                </select>
+            </div>
+        </div>
+
+        <button class="btn-start" onclick="startGame()">🚀 ૧૦ ગુણની રમત / ટેસ્ટ શરૂ કરો</button>
+    </div>
+
+    <!-- 2. GAME SCREEN -->
+    <div id="gameScreen" class="screen">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #e0e7ff; padding: 10px 15px; border-radius: 10px;">
+            <div id="playerDisplay" style="font-weight: bold; color: #3730a3; font-size: 15px;"></div>
+            <button onclick="resetGame()" style="background:#ef4444; color:white; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:bold;">⚙️ બદલો</button>
+        </div>
+
+        <!-- Rules Notification Header -->
+        <div id="levelRuleInfo" style="background:#fef3c7; color:#92400e; padding:8px 12px; border-radius:8px; font-size:13px; font-weight:bold; margin-bottom:12px;"></div>
+
+        <!-- 10 Questions Container -->
+        <div id="questionsContainer"></div>
+
+        <div class="btn-group">
+            <button class="btn btn-submit" onclick="evaluateQuiz()">✅ પરિણામ અને કચાસ ચકાસો</button>
+            <button class="btn btn-excel" onclick="exportSingleExcel()">📊 એક્સેલ (.CSV) ડાઉનલોડ</button>
+            <button class="btn btn-print" onclick="window.print()">🖨️ PDF / રિપોર્ટ પ્રિન્ટ કરો</button>
+        </div>
+
+        <!-- REPORT CARD SECTION -->
+        <div id="reportBox" class="report-box" style="display: none;">
+            <h3 style="margin-top:0; color:#1e1b4b;">📝 ગણન સ્તર મૂલ્યાંકન રિપોર્ટ કાર્ડ</h3>
+            <p style="margin:4px 0;"><strong>શાળા:</strong> રંગપુર પ્રા.શાળા, તા: વાંસદા, જિ: નવસારી</p>
+            <p style="margin:4px 0;"><strong>વિદ્યાર્થી:</strong> <span id="rName"></span> | <strong>રોલ નં:</strong> <span id="rRoll"></span> | <strong>ધોરણ:</strong> ૮ | <strong>વિષય:</strong> ગણન</p>
+            <p style="margin:4px 0;"><strong>પસંદ કરેલ સ્તર:</strong> <span id="rLevel"></span> | <strong>ટેસ્ટ સેટ:</strong> <span id="rSet"></span></p>
+            <p style="margin:8px 0;"><strong>કુલ મેળવેલ ગુણ:</strong> <span id="rScore" style="font-size: 22px; color: var(--primary); font-weight: bold;"></span> / ૧૦</p>
+
+            <h4 style="margin-bottom: 8px; color: #334155;">લેબલ વાઇઝ કૌશલ્ય સ્થિતિ (Competency Status):</h4>
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>દાખલાનો પ્રકાર / કૌશલ્ય લેબલ</th>
+                        <th>સાચા ગુણ</th>
+                        <th>લેબલ પાર પરિણામ</th>
+                    </tr>
+                </thead>
+                <tbody id="labelReportBody"></tbody>
+            </table>
+
+            <!-- Weakness Highlight Area -->
+            <div id="kachasAlert" class="kc-alert"></div>
+
+            <br>
+            <div style="display: flex; justify-content: space-between; margin-top: 25px; font-weight: bold; font-size: 14px;">
+                <div>વિદ્યાર્થીની સહી: ____________</div>
+                <div>શિક્ષકની સહી (Tr. Ketan Solanki): ____________</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TEACHER ADMIN MODAL -->
+<div id="adminModal" class="modal-overlay">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #e2e8f0; padding-bottom:10px; margin-bottom:15px;">
+            <h2 style="margin:0; color:#1e293b;">🔐 શિક્ષક પેનલ (Teacher Admin Data)</h2>
+            <button onclick="closeAdminModal()" style="background:#64748b; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">બંધ કરો ✕</button>
+        </div>
+
+        <div id="adminAuthArea">
+            <p>શિક્ષક ડેટાબેઝ જોવા માટે પાસવર્ડ દાખલ કરો:</p>
+            <div style="display:flex; gap:10px; max-width:320px;">
+                <input type="password" id="adminPin" placeholder="પાસવર્ડ દાખલ કરો" style="padding:10px; border:2px solid #cbd5e1; border-radius:8px; width:100%;">
+                <button onclick="verifyAdminPin()" style="background:var(--primary); color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer; font-weight:bold;">લોગિન</button>
+            </div>
+        </div>
+
+        <div id="adminDataArea" style="display:none;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+                <button onclick="exportMasterExcel()" style="background:#16a34a; color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer; font-weight:bold;">📊 આખા શાળાનો Master Excel ડાઉનલોડ કરો</button>
+                <button onclick="clearAllData()" style="background:#ef4444; color:white; border:none; padding:10px 15px; border-radius:8px; cursor:pointer; font-weight:bold;">🗑️ તમામ ડેટા ખાલી (Delete) કરો</button>
+            </div>
+
+            <p>કુલ નોંધાયેલ પરિણામો: <b id="totalRecordsCount">0</b></p>
+            
+            <div style="overflow-x:auto;">
+                <table class="report-table" id="masterTable">
+                    <thead>
+                        <tr>
+                            <th>તારીખ</th>
+                            <th>રોલ</th>
+                            <th>નામ</th>
+                            <th>સ્તર</th>
+                            <th>ટેસ્ટ</th>
+                            <th>ગુણ</th>
+                            <th>વિદ્યાર્થીની કચાસ (સુધારા ક્ષેત્ર)</th>
+                            <th>એક્શન</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Helper to convert Gujarati digits to English
+function normNum(str) {
+    if (!str) return "";
+    const map = {'૦':'0', '૧':'1', '૨':'2', '૩':'3', '૪':'4', '૫':'5', '૬':'6', '૭':'7', '૮':'8', '૯':'9'};
+    return str.toString().replace(/[૦-૯]/g, w => map[w]).trim();
+}
+
+// Populate 50 Test Sets in Dropdown
+function updateSetOptions() {
+    const setSelect = document.getElementById('setSelect');
+    setSelect.innerHTML = '';
+    for (let i = 1; i <= 50; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.innerText = `ટેસ્ટ પેપર સેટ - ${i}`;
+        setSelect.appendChild(opt);
+    }
+}
+updateSetOptions();
+
+// DETERMINISTIC 10-QUESTION GENERATOR FOR 50 SETS PER LEVEL
+function generateTestQuestions(level, setNo) {
+    const s = parseInt(setNo);
+    let questions = [];
+
+    if (level === 'easy') {
+        questions = [
+            { label: "સરવાળા-બાદબાકી", q: `૧. ${2500 + s*120} + ${1400 + s*35} નો સરવાળો કેટલો થાય?`, ans: (2500 + s*120 + 1400 + s*35).toString() },
+            { label: "સરવાળા-બાદબાકી", q: `૨. ${8500 + s*50} - ${3200 + s*20} ની બાદબાકી કરો.`, ans: (8500 + s*50 - (3200 + s*20)).toString() },
+            { label: "ગુણાકાર-ભાગાકાર", q: `૩. ${12 + (s%10)} × ${15 + (s%5)} નો જવાબ શોધો.`, ans: ((12 + (s%10)) * (15 + (s%5))).toString() },
+            { label: "ગુણાકાર-ભાગાકાર", q: `૪. ${(12 + s) * 8} ÷ ૮ નો જવાબ કેટલો થાય?`, ans: (12 + s).toString() },
+            { label: "સ્થાનકિંમત", q: `૫. ${400000 + s*1000 + 520 + (s%9)} માં ${5} ની સ્થાનકિંમત લખો.`, ans: "500" },
+            { label: "સંખ્યાજ્ઞાન", q: `૬. શ્રેણી આગળ વધારો: ${s*10}, ${s*10 + 5}, ${s*10 + 10}, ____`, ans: (s*10 + 15).toString() },
+            { label: "વ્યવહારુ કોયડા", q: `૭. રાહુલ પાસે ₹${500 + s*10} હતા. તેણે ₹${150 + s*5} ની ચોપડી ખરીદી, તો કેટલા રૂપિયા વધે?`, ans: (500 + s*10 - (150 + s*5)).toString() },
+            { label: "સમય અને નાણું", q: `૮. ${2 + (s%5)} કલાક એટલે કેટલી મિનિટ થાય?`, ans: ((2 + (s%5)) * 60).toString() },
+            { label: "એકમ માપન", q: `૯. ${3 + (s%7)} કિલોગ્રામ = કેટલા ગ્રામ થાય?`, ans: ((3 + (s%7)) * 1000).toString() },
+            { label: "સાદી ગણતરી", q: `૧૦. ${100 + s*5} × ૫ નો સાચો જવાબ આપો.`, ans: ((100 + s*5) * 5).toString() }
+        ];
+    } else if (level === 'medium') {
+        const v1 = (s % 5) + 2;
+        questions = [
+            { label: "અપૂર્ણાંક ક્રિયાઓ", q: `૧. ૦.૫ + ${(s * 0.25).toFixed(2)} નો સાદો દશાંશ જવાબ આપો.`, ans: (0.5 + parseFloat((s * 0.25).toFixed(2))).toString() },
+            { label: "દશાંશ અંકગણિત", q: `૨. ${12.5 + s} × ૨ નો જવાબ શોધો.`, ans: ((12.5 + s) * 2).toString() },
+            { label: "ટકાવારી ગણતરી", q: `૩. ₹${500 + s*10} ના ૨૦% કેટલા રૂપિયા થાય?`, ans: ((500 + s*10) * 0.2).toString() },
+            { label: "વર્ગ અને વર્ગમૂળ", q: `૪. ${10 + (s%12)} નો વર્ગ (${10 + (s%12)} × ${10 + (s%12)}) કેટલો થાય?`, ans: Math.pow(10 + (s%12), 2).toString() },
+            { label: "એકચલ સમીકરણો", q: `૫. જો ૨x + ${s*2} = ${20 + s*2} હોય તો x ની કિંમત શોધો.`, ans: "10" },
+            { label: "પરિમિતિ અને ક્ષેત્રફળ", q: `૬. લંબાઈ = ${10 + s} સેમી અને પહોળાઈ = ૫ સેમીવાળા લંબચોરસનું ક્ષેત્રફળ શોધો.`, ans: ((10 + s) * 5).toString() },
+            { label: "ગુણોત્તર અને પ્રમાણ", q: `૭. ₹${1000 + s*100} ને ૧:૧ ના સરખા ગુણોત્તરમાં વહેંચતાં એક ભાગ કેટલો થાય?`, ans: ((1000 + s*100)/2).toString() },
+            { label: "વ્યવહારુ દશાંશ ગણતરી", q: `૮. ૧ લીટર પેટ્રોલમાં કાર ૧૫ કીમી ચાલે તો ${v1} લીટરમાં કેટલા કિમી ચાલશે?`, ans: (15 * v1).toString() },
+            { label: "સરાસરી અને માહિતી", q: `૯. ૧૦, ૨૦ અને ${30 + s*3} ની સરાસરી શોધો.`, ans: ((60 + s*3)/3).toString() },
+            { label: "ઘાતાંક અને સાદુંરૂપ", q: `૧૦. ૨ ની ૩ ઘાત × ૨ ની ૨ ઘાત = ૨ ની કેટલી ઘાત થાય?`, ans: "5" }
+        ];
+    } else {
+        const k = (s % 10) + 1;
+        questions = [
+            { label: "બીજગણિતીય કૂટપ્રશ્નો", q: `૧. ૫x - ${k} = ${40 - k} હોય તો x ની કિંમત કઈ?`, ans: "8" },
+            { label: "નિત્યસમ અને સાદુંરૂપ", q: `૨. નિત્યસમનો ઉપયોગ કરી (${100 + k})^૨ ની કિંમત શોધો.`, ans: Math.pow(100 + k, 2).toString() },
+            { label: "અવયવીકરણ જટિલ", q: `૩. x² - ${k*k} ના અવયવોમાં x = ${k + 5} મૂકતાં પરિણામ શોધો.`, ans: (Math.pow(k + 5, 2) - k*k).toString() },
+            { label: "નફો-ખોટ અને વ્યાજ", q: `૪. ₹${10000 + s*500} પર ૧૦% લેખે ૧ વર્ષનું સાદું વ્યાજ (I = PRN/100) શોધો.`, ans: ((10000 + s*500) * 0.1).toString() },
+            { label: "ક્ષેત્રફળ અને ઘનફળ", q: `૫. ${3 + (s%6)} સેમી બાજુવાળા સમઘનનું ઘનફળ (l³) શોધો.`, ans: Math.pow(3 + (s%6), 3).toString() },
+            { label: "સમપ્રમાણ વ્યસ્તપ્રમાણ", q: `૬. ૬૦ કિમી/કલાકની ઝડપે ચાલતી ટ્રેન ${k} કલાકમાં કેટલું અંતર કાપશે?`, ans: (60 * k).toString() },
+            { label: "ભૂમિતિ અને ખૂણાઓ", q: `૭. ${50 + (s%40)} અંશના ખૂણાના પૂરકકોણનું માપ શોધો (૧૮૦ માંથી બાદ કરો).`, ans: (180 - (50 + (s%40))).toString() },
+            { label: "આંકડાશાસ્ત્ર-સંભાવના", q: `૮. પાસો ફેંકતાં તેના પર બેકી સંખ્યા (૨, ૪, ૬) આવે તેની સંભાવના દશાંશમાં કેટલી?`, ans: "0.5" },
+            { label: "વૈજ્ઞાનિક સંકેત", q: `૯. ૧૦૦૦૦૦ ને ૧૦ ની કેટલી ઘાત તરીકે દર્શાવાય?`, ans: "5" },
+            { label: "ઉચ્ચ તાર્કિક કોયડા", q: `૧૦. પિતા અને પુત્રની વર્તમાન ઉંમરનો સરવાળો ${40 + s} વર્ષ છે. ૫ વર્ષ પછી સરવાળો કેટલો થશે?`, ans: (40 + s + 10).toString() }
+        ];
+    }
+
+    // Attach tracking properties for chances
+    const maxAllowedAttempts = (level === 'easy') ? 1 : 3;
+    return questions.map(item => ({
+        ...item,
+        attemptsLeft: maxAllowedAttempts,
+        isLocked: false,
+        userAnswer: "",
+        isCorrect: false
+    }));
+}
+
+let activeQuestions = [];
+let currentLevel = 'easy';
+
+function startGame() {
+    const name = document.getElementById('studentName').value.trim();
+    const roll = document.getElementById('rollNo').value.trim();
+    currentLevel = document.getElementById('levelSelect').value;
+    const setNo = document.getElementById('setSelect').value;
+
+    if (!name || !roll) {
+        alert("⚠️ કૃપા કરીને વિદ્યાર્થીનું પૂરું નામ અને રોલ નંબર લખો!");
+        return;
+    }
+
+    const levelText = document.getElementById('levelSelect').options[document.getElementById('levelSelect').selectedIndex].text;
+    document.getElementById('playerDisplay').innerHTML = `👤 વિદ્યાર્થી: <b>${name}</b> | 🔢 રોલ નં: <b>${roll}</b> | 🎯 ${levelText} | 📄 સેટ - ${setNo}`;
+
+    // Display Rules notification
+    const ruleBox = document.getElementById('levelRuleInfo');
+    if (currentLevel === 'easy') {
+        ruleBox.innerHTML = `📌 <b>સરળ સ્તર નિયમ:</b> તમને દરેક પ્રશ્ન માટે <b>માત્ર ૧ જ તક</b> મળશે. જવાબ ચકાસ્યા પછી ખોટો પડે તો સુધારી શકાશે નહીં.`;
+    } else {
+        ruleBox.innerHTML = `📌 <b>મધ્યમ/અઘરા સ્તર નિયમ:</b> દરેક પ્રશ્નનો જવાબ સુધારવા માટે તમને <b>મહત્તમ ૩ તક (Chances)</b> મળશે.`;
+    }
+
+    activeQuestions = generateTestQuestions(currentLevel, setNo);
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+
+    activeQuestions.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'q-card';
+        div.innerHTML = `
+            <div style="flex:2;">
+                <span class="q-tag">${item.label}</span>
+                <div class="q-text">${item.q}</div>
+            </div>
+            <div class="ans-box">
+                <div class="input-row">
+                    <input type="text" class="ans-input" id="q_input_${index}" placeholder="જવાબ">
+                    <button class="check-btn" id="btn_check_${index}" onclick="verifySingleAnswer(${index})">ચકાસો</button>
+                    <div class="status-badge" id="q_badge_${index}"></div>
+                </div>
+                <div class="chance-text" id="chance_lbl_${index}">
+                    ${currentLevel === 'easy' ? 'તક: ૧/૧' : 'પ્રયત્ન: ૩/૩ બાકી'}
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+
+    document.getElementById('startScreen').classList.remove('active');
+    document.getElementById('gameScreen').classList.add('active');
+    document.getElementById('reportBox').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function verifySingleAnswer(index) {
+    const item = activeQuestions[index];
+    if (item.isLocked) return;
+
+    const inputElem = document.getElementById(`q_input_${index}`);
+    const badgeElem = document.getElementById(`q_badge_${index}`);
+    const btnElem = document.getElementById(`btn_check_${index}`);
+    const chanceLbl = document.getElementById(`chance_lbl_${index}`);
+
+    const rawVal = inputElem.value;
+    const normVal = normNum(rawVal);
+
+    if (normVal === "") {
+        alert("કૃપા કરીને જવાબ લખો!");
+        return;
+    }
+
+    item.attemptsLeft--;
+    item.userAnswer = rawVal;
+
+    if (normVal === item.ans) {
+        // Correct Answer
+        item.isCorrect = true;
+        item.isLocked = true;
+        badgeElem.innerHTML = "✓";
+        badgeElem.className = "status-badge correct";
+        inputElem.disabled = true;
+        btnElem.disabled = true;
+        chanceLbl.innerHTML = `<span style="color:green">સાચો જવાબ!</span>`;
+    } else {
+        // Wrong Answer
+        item.isCorrect = false;
+        badgeElem.innerHTML = "✕";
+        badgeElem.className = "status-badge wrong";
+
+        if (currentLevel === 'easy' || item.attemptsLeft <= 0) {
+            // Lock immediately for easy level OR when attempts exhaust
+            item.isLocked = true;
+            inputElem.disabled = true;
+            btnElem.disabled = true;
+            chanceLbl.innerHTML = `<span style="color:red">તક પૂરી થઈ ગઈ!</span>`;
+        } else {
+            // Allow retry for medium and hard levels
+            chanceLbl.innerHTML = `<span style="color:red">ખોટો જવાબ! (બાકી પ્રયત્નો: ${item.attemptsLeft})</span>`;
+        }
+    }
+}
+
+function evaluateQuiz() {
+    let score = 0;
+    let labelStats = {};
+    let missedLabels = [];
+
+    activeQuestions.forEach((item, index) => {
+        if (!labelStats[item.label]) {
+            labelStats[item.label] = { total: 0, correct: 0 };
+        }
+        labelStats[item.label].total++;
+
+        if (item.isCorrect) {
+            score++;
+            labelStats[item.label].correct++;
+        } else {
+            if (!missedLabels.includes(item.label)) {
+                missedLabels.push(item.label);
+            }
+        }
+    });
+
+    const sName = document.getElementById('studentName').value;
+    const sRoll = document.getElementById('rollNo').value;
+    const sLevel = document.getElementById('levelSelect').options[document.getElementById('levelSelect').selectedIndex].text;
+    const sSet = document.getElementById('setSelect').value;
+
+    document.getElementById('rName').innerText = sName;
+    document.getElementById('rRoll').innerText = sRoll;
+    document.getElementById('rLevel').innerText = sLevel;
+    document.getElementById('rSet').innerText = sSet;
+    document.getElementById('rScore').innerText = score;
+
+    const tbody = document.getElementById('labelReportBody');
+    tbody.innerHTML = '';
+
+    for (const [label, data] of Object.entries(labelStats)) {
+        const isPassed = (data.correct / data.total) >= 1.0;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><b>${label}</b></td>
+            <td>${data.correct} / ${data.total}</td>
+            <td style="color: ${isPassed ? '#059669' : '#dc2626'}; font-weight: bold;">
+                ${isPassed ? 'પાર કરેલ છે (Mastered) 🟢' : 'પુનઃ મહાવરો જરૂરી 🔴'}
+            </td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    // Kachas / Remedial Evaluation Message
+    const alertBox = document.getElementById('kachasAlert');
+    if (missedLabels.length > 0) {
+        alertBox.innerHTML = `⚠️ <b>વિદ્યાર્થીની કચાસ (સુધારાત્મક ક્ષેત્ર):</b> નીચેના કૌશલ્યના દાખલાઓમાં પુનઃ માર્ગદર્શન અને મહાવરાની જરૂર છે:<br>👉 <i>${missedLabels.join(', ')}</i>`;
+    } else {
+        alertBox.innerHTML = `🎉 <b>અભિનંદન!</b> વિદ્યાર્થીએ તમામ કૌશલ્ય લેબલ્સ સફળતાપૂર્વક પાર કરેલ છે. કોઈ કચાસ નથી.`;
+    }
+
+    document.getElementById('reportBox').style.display = 'block';
+
+    // SAVE TO LOCAL TEACHER DATABASE
+    saveStudentResult({
+        date: new Date().toLocaleDateString('gu-IN') + ' ' + new Date().toLocaleTimeString('gu-IN', {hour:'2-digit', minute:'2-digit'}),
+        roll: sRoll,
+        name: sName,
+        level: sLevel,
+        setNo: sSet,
+        score: score,
+        kachas: missedLabels.length > 0 ? missedLabels.join('; ') : 'કોઈ કચાસ નથી'
+    });
+
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+// STORAGE & TEACHER ADMIN FUNCTIONS
+function saveStudentResult(record) {
+    let records = JSON.parse(localStorage.getItem('rangpur_ganan_results') || '[]');
+    records.push(record);
+    localStorage.setItem('rangpur_ganan_results', JSON.stringify(records));
+}
+
+function openAdminModal() {
+    document.getElementById('adminModal').style.display = 'flex';
+    document.getElementById('adminAuthArea').style.display = 'block';
+    document.getElementById('adminDataArea').style.display = 'none';
+    document.getElementById('adminPin').value = '';
+}
+
+function closeAdminModal() {
+    document.getElementById('adminModal').style.display = 'none';
+}
+
+function verifyAdminPin() {
+    const pin = document.getElementById('adminPin').value.trim();
+    // STRICT CHECK FOR PASSWORD 'RANGPUR'
+    if (pin === "RANGPUR") {
+        document.getElementById('adminAuthArea').style.display = 'none';
+        document.getElementById('adminDataArea').style.display = 'block';
+        loadAdminTable();
+    } else {
+        alert("❌ ખોટો પાસવર્ડ! યોગ્ય શિક્ષક પાસવર્ડ દાખલ કરો.");
+    }
+}
+
+function loadAdminTable() {
+    const records = JSON.parse(localStorage.getItem('rangpur_ganan_results') || '[]');
+    document.getElementById('totalRecordsCount').innerText = records.length;
+    const tbody = document.getElementById('adminTableBody');
+    tbody.innerHTML = '';
+
+    records.forEach((rec, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${rec.date}</td>
+            <td>${rec.roll}</td>
+            <td><b>${rec.name}</b></td>
+            <td>${rec.level}</td>
+            <td>સેટ-${rec.setNo}</td>
+            <td><b>${rec.score} / ૧૦</b></td>
+            <td style="color:${rec.kachas === 'કોઈ કચાસ નથી' ? 'green' : 'red'};">${rec.kachas}</td>
+            <td><button onclick="deleteRecord(${idx})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">ડીલીટ</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function deleteRecord(index) {
+    if (confirm("શું તમે આ વિદ્યાર્થીનો ડેટા રીમુવ કરવા માંગો છો?")) {
+        let records = JSON.parse(localStorage.getItem('rangpur_ganan_results') || '[]');
+        records.splice(index, 1);
+        localStorage.setItem('rangpur_ganan_results', JSON.stringify(records));
+        loadAdminTable();
+    }
+}
+
+function clearAllData() {
+    if (confirm("⚠️ શું તમે તમામ વિદ્યાર્થીઓનો ડેટા કાયમ માટે ડિલીટ કરવા માંગો છો?")) {
+        localStorage.removeItem('rangpur_ganan_results');
+        loadAdminTable();
+    }
+}
+
+// EXPORT SINGLE TEST EXCEL WITH KACHAS
+function exportSingleExcel() {
+    const name = document.getElementById('studentName').value || "Student";
+    const roll = document.getElementById('rollNo').value || "0";
+    const levelKey = document.getElementById('levelSelect').value;
+    const setNo = document.getElementById('setSelect').value;
+
+    let missedLabels = [];
+    activeQuestions.forEach((item) => {
+        if (!item.isCorrect && !missedLabels.includes(item.label)) {
+            missedLabels.push(item.label);
+        }
+    });
+
+    let csv = "data:text/csv;charset=utf-8,\uFEFF";
+    csv += `શાળાનું નામ,રંગપુર પ્રા.શાળા તા: વાંસદા જિ: નવસારી\n`;
+    csv += `શિક્ષકનું નામ,Tr. Ketan Solanki\n`;
+    csv += `વિદ્યાર્થીનું નામ,${name}\n`;
+    csv += `રોલ નંબર,${roll}\n`;
+    csv += `ધોરણ,૮\n`;
+    csv += `વિષય,ગણન મૂલ્યાંકન\n`;
+    csv += `ટેસ્ટ સેટ,${setNo}\n`;
+    csv += `વિદ્યાર્થીની કચાસ,${missedLabels.length > 0 ? missedLabels.join('; ') : 'કોઈ કચાસ નથી'}\n\n`;
+    csv += `ક્રમ,પ્રશ્ન,સાચો જવાબ,વિદ્યાર્થીનો જવાબ,પરિણામ,કૌશલ્ય લેબલ\n`;
+
+    activeQuestions.forEach((item, index) => {
+        const res = item.isCorrect ? "સાચો" : "ખોટો";
+        csv += `"${index + 1}","${item.q}","${item.ans}","${item.userAnswer}","${res}","${item.label}"\n`;
+    });
+
+    const uri = encodeURI(csv);
+    const link = document.createElement("a");
+    link.href = uri;
+    link.download = `Ganan_Test_Roll_${roll}_${name}_Set_${setNo}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// EXPORT ALL SCHOOL MASTER DATA EXCEL (Teacher Only)
+function exportMasterExcel() {
+    const records = JSON.parse(localStorage.getItem('rangpur_ganan_results') || '[]');
+    if (records.length === 0) {
+        alert("ડાઉનલોડ કરવા માટે કોઈ ડેટા ઉપલબ્ધ નથી.");
+        return;
+    }
+
+    let csv = "data:text/csv;charset=utf-8,\uFEFF";
+    csv += `રંગપુર પ્રા.શાળા તા: વાંસદા જિ: નવસારી - ગણન મૂલ્યાંકન માસ્ટર રિપોર્ટ\n`;
+    csv += `શિક્ષક: Tr. Ketan Solanki\n\n`;
+    csv += `તારીખ-સમય,રોલ નંબર,વિદ્યાર્થીનું નામ,ગણન સ્તર,ટેસ્ટ સેટ,મેળવેલ ગુણ (/૧૦),વિદ્યાર્થીની કચાસ (સુધારાત્મક ક્ષેત્ર)\n`;
+
+    records.forEach(r => {
+        csv += `"${r.date}","${r.roll}","${r.name}","${r.level}","સેટ-${r.setNo}","${r.score}","${r.kachas}"\n`;
+    });
+
+    const uri = encodeURI(csv);
+    const link = document.createElement("a");
+    link.href = uri;
+    link.download = `Rangpur_Primary_School_Master_Ganan_Report.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function resetGame() {
+    document.getElementById('gameScreen').classList.remove('active');
+    document.getElementById('startScreen').classList.add('active');
+    document.getElementById('reportBox').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
+
