@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>વિજ્ઞાન રમત - સૂક્ષ્મજીવો: મિત્ર અને શત્રુ</title>
+    <style>
+        :root {
+            --primary: #1e88e5;
+            --secondary: #42a5f5;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #0d47a1;
+            --light: #e3f2fd;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #1e88e5, #42a5f5);
+            margin: 0; padding: 15px; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .container {
+            width: 100%; max-width: 950px; background: rgba(255, 255, 255, 0.98);
+            border-radius: 25px; padding: 25px; 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .screen { display: none; }
+        .active-screen { display: block; animation: fadeIn 0.4s ease-in-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .school-header {
+            background: linear-gradient(135deg, #0d47a1, #1e88e5);
+            color: white; padding: 20px; border-radius: 20px;
+            text-align: center; margin-bottom: 20px; 
+            box-shadow: 0 8px 20px rgba(13, 71, 161, 0.3);
+        }
+        .school-header h2 { margin: 0 0 5px 0; font-size: 22px; letter-spacing: 0.5px; }
+        .school-header h4 { margin: 0; color: #f1c40f; font-size: 16px; font-weight: 600; }
+
+        .title-box {
+            text-align: center; background: #fff3cd; color: #856404;
+            padding: 15px; border-radius: 15px; font-weight: bold; font-size: 20px;
+            margin-bottom: 20px; border: 2px solid #ffeeba; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .lo-box {
+            background: #e3f2fd; border-left: 6px solid var(--primary);
+            padding: 18px; border-radius: 15px; margin-bottom: 20px;
+            font-size: 15px; color: var(--dark); line-height: 1.6; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .lo-box h3 { margin: 0 0 10px 0; color: var(--primary); font-size: 18px; }
+        .lo-box ul { margin: 8px 0 0 20px; padding: 0; }
+        .lo-box li { margin-bottom: 6px; }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--dark); font-size: 16px; }
+        input[type="text"], input[type="number"] {
+            width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 16px;
+            outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(30, 136, 229, 0.3); }
+
+        .btn {
+            background: linear-gradient(135deg, #1e88e5, #0d47a1); color: white; border: none; padding: 14px 28px;
+            font-size: 19px; border-radius: 12px; cursor: pointer; font-weight: bold;
+            transition: 0.3s; box-shadow: 0 6px 15px rgba(13, 71, 161, 0.3); width: 100%;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(13, 71, 161, 0.4); }
+        .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); box-shadow: none; }
+        .btn-outline:hover { background: var(--primary); color: white; }
+
+        .info-bar {
+            display: flex; justify-content: space-between; background: #e3f2fd; padding: 14px 20px;
+            border-radius: 15px; margin-bottom: 20px; font-weight: bold; color: var(--dark); border: 1px solid #bbdefb;
+            font-size: 16px;
+        }
+
+        /* ૫-૫ લેવલ બટનો એક લાઈનમાં ગોઠવવા માટે CSS Grid */
+        .level-tabs {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            background: #ffffff; border: 2px solid #cbd5e1; padding: 10px 4px; border-radius: 12px;
+            cursor: pointer; text-align: center; font-weight: bold; color: var(--dark); transition: 0.3s;
+            font-size: 13px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;
+        }
+        .tab-btn:hover { background: #e2e8f0; }
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3); }
+        .tab-btn.completed { border-color: var(--success); background: #e8f5e9; color: #2e7d32; }
+
+        .topic-badge {
+            background: #fff3cd; color: #856404; border: 1px solid #ffeeba;
+            padding: 12px 18px; border-radius: 12px; font-weight: bold; margin-bottom: 20px; text-align: center; font-size: 16px;
+        }
+
+        .single-question-card {
+            background: #ffffff; border: 2px solid #e2e8f0; border-left: 6px solid var(--primary);
+            padding: 18px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 16px;
+        }
+        .q-title { font-size: 17px; font-weight: bold; color: var(--dark); margin-bottom: 12px; line-height: 1.5; }
+
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+        .opt-label { 
+            display: flex; align-items: center; background: #f8fafc; border: 2px solid #cbd5e1; 
+            padding: 11px 15px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 15px;
+            transition: 0.2s;
+        }
+        .opt-label:hover { border-color: var(--primary); background: #f0f4ff; }
+        .opt-label input { margin-right: 10px; transform: scale(1.2); }
+
+        .tf-grid { display: flex; gap: 15px; }
+        .tf-btn-label {
+            flex: 1; text-align: center; padding: 12px; border-radius: 10px; font-size: 17px; font-weight: bold;
+            cursor: pointer; border: 2px solid #cbd5e1; background: #f8fafc; transition: 0.2s;
+        }
+        .tf-btn-label input { display: none; }
+        .selected-true { background: #2ecc71 !important; color: white; border-color: #27ae60; }
+        .selected-false { background: #e74c3c !important; color: white; border-color: #c0392b; }
+
+        /* Color Matching UI */
+        .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .match-col { display: flex; flex-direction: column; gap: 10px; }
+        .match-item {
+            padding: 12px 15px; border: 2px solid #cbd5e1; border-radius: 10px; background: #f8fafc;
+            font-weight: bold; cursor: pointer; transition: 0.3s; text-align: center;
+        }
+        .match-item:hover { border-color: var(--primary); }
+        .match-item.selected { border-color: var(--warning); background: #fff9c4; transform: scale(1.02); }
+
+        /* Classification UI */
+        .class-items { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+        .class-item-btn {
+            padding: 10px 15px; background: #e3f2fd; border: 2px solid #90caf9; border-radius: 20px;
+            font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .class-item-btn.selected { background: var(--warning); color: white; border-color: #f57c00; }
+        .class-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .class-box {
+            border: 2px dashed var(--primary); border-radius: 12px; padding: 15px; min-height: 120px;
+            background: #f1f8e9; text-align: center; cursor: pointer; transition: 0.3s;
+        }
+        .class-box:hover { background: #ded; }
+        .class-box h4 { margin: 0 0 10px 0; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
+        .box-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .box-tag { padding: 6px 12px; background: white; border: 1px solid var(--primary); border-radius: 15px; font-weight: bold; font-size: 14px; }
+
+        .feedback-badge { margin-top: 10px; font-weight: bold; font-size: 15px; display: none; }
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+
+        .report-table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 12px; overflow: hidden; }
+        .report-table th, .report-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .report-table th { background-color: var(--primary); color: white; }
+
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+        .modal-box {
+            background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 20px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transform: scale(0.8); transition: 0.3s;
+        }
+        .modal-box.show { transform: scale(1); }
+        .modal-icon { font-size: 60px; margin-bottom: 10px; }
+        .modal-title { font-size: 24px; color: var(--dark); margin: 10px 0; font-weight: bold; }
+        .modal-score { font-size: 35px; font-weight: bold; margin: 10px 0; }
+
+        #sheet-status {
+            margin-top: 10px; font-weight: bold; text-align: center; padding: 8px; border-radius: 8px; display: none;
+        }
+
+        @media (max-width: 768px) { 
+            .level-tabs { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 480px) { 
+            .level-tabs { grid-template-columns: repeat(2, 1fr); }
+            .info-bar { flex-direction: column; gap: 5px; text-align: center; } 
+            .match-grid, .class-boxes { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- સ્ક્રીન ૧: હોમ પેજ -->
+    <div id="screen-welcome" class="screen active-screen">
+        <div class="school-header">
+            <h2>RANGPUR PRI. SCHOOL, TA: VANSDA, DI: NAVSARI</h2>
+            <h4>CREATED BY: TR. KETAN SOLANKI</h4>
+        </div>
+
+        <div class="title-box">
+            🦠 ધોરણ 8 - વિજ્ઞાન: પ્રકરણ 2 - સૂક્ષ્મજીવો: મિત્ર અને શત્રુ
+        </div>
+
+        <div class="lo-box">
+            <h3>📌 અધ્યયન નિષ્પત્તિઓ (Learning Outcomes):</h3>
+            <ul>
+                <li><b>SC802:</b> પદાર્થો અને સજીવોને તેમના ગુણધર્મ/લાક્ષણિકતાનાં આધારે વર્ગીકૃત કરે છે.</li>
+                <li><b>SC803:</b> પ્રશ્નોના જવાબ મેળવવા સરળ તપાસ હાથ ધરે છે.</li>
+                <li><b>SC804:</b> પ્રક્રિયા અને ઘટનાને કારણો સાથે જોડે છે.</li>
+                <li><b>SC805:</b> પ્રક્રિયા અને ઘટનાઓને સમજાવે છે.</li>
+                <li><b>SC811:</b> શીખેલા વૈજ્ઞાનિક ખ્યાલોને રોજિંદા જીવનમાં લાગુ કરે છે.</li>
+                <li><b>SC812:</b> વૈજ્ઞાનિક શોધ વાર્તાઓની ચર્ચા અને કદર કરે છે.</li>
+            </ul>
+        </div>
+        
+        <div style="max-width: 400px; margin: 0 auto;">
+            <div class="form-group">
+                <label for="student-name">વિદ્યાર્થીનું પૂરૂં નામ:</label>
+                <input type="text" id="student-name" placeholder="અહીં તમારું નામ લખો..." required>
+            </div>
+            <div class="form-group">
+                <label for="student-roll">રોલ નંબર:</label>
+                <input type="number" id="student-roll" placeholder="તમારો રોલ નંબર" required>
+            </div>
+            <button class="btn" onclick="startApp()">રમત શરૂ કરો 🚀</button>
+        </div>
+    </div>
+
+    <!-- સ્ક્રીન ૨: ગેમ પ્લે સ્ક્રીન -->
+    <div id="screen-game" class="screen">
+        <div class="info-bar">
+            <span>👤 <span id="disp-name"></span> (રોલ નં: <span id="disp-roll"></span>)</span>
+            <span>⭐ કુલ સ્કોર: <span id="total-score" style="color:var(--primary);">0</span> / <span id="total-max">80</span></span>
+        </div>
+
+        <!-- ૫-૫ ના ગ્રીડમાં લેવલ બટનો -->
+        <div class="level-tabs">
+            <button class="tab-btn" id="tab-1" onclick="switchLevel(1)">૧. લેવલ ૧</button>
+            <button class="tab-btn" id="tab-2" onclick="switchLevel(2)">૨. લેવલ ૨</button>
+            <button class="tab-btn" id="tab-3" onclick="switchLevel(3)">૩. લેવલ ૩</button>
+            <button class="tab-btn" id="tab-4" onclick="switchLevel(4)">૪. લેવલ ૪</button>
+            <button class="tab-btn" id="tab-5" onclick="switchLevel(5)">૫. લેવલ ૫</button>
+            <button class="tab-btn" id="tab-6" onclick="switchLevel(6)">૬. લેવલ ૬</button>
+            <button class="tab-btn" id="tab-7" onclick="switchLevel(7)">૭. લેવલ ૭</button>
+            <button class="tab-btn" id="tab-8" onclick="switchLevel(8)">૮. લેવલ ૮</button>
+            <button class="tab-btn" id="tab-9" onclick="switchLevel(9)">૯. લેવલ ૯</button>
+            <button class="tab-btn" id="tab-10" onclick="switchLevel(10)">૧૦. લેવલ ૧૦</button>
+            <button class="tab-btn" id="tab-11" onclick="switchLevel(11)">૧૧. લેવલ ૧૧</button>
+            <button class="tab-btn" id="tab-12" onclick="switchLevel(12)">૧૨. લેવલ ૧૨</button>
+        </div>
+
+        <div class="topic-badge" id="level-topic-text">મુદ્દો: </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 id="level-title-text" style="margin: 0; color: var(--primary);">લેવલ</h3>
+            <span style="font-weight: bold;">લેવલ ગુણ: <span id="level-score">0</span> / <span id="level-max">0</span></span>
+        </div>
+
+        <div id="all-questions-area"></div>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button class="btn" id="submit-level-btn" onclick="checkAllAnswers()">જવાબ ચકાસો ➔</button>
+            <button class="btn btn-outline" onclick="showFinalReport()">📊 અંતિમ પરિણામ જુઓ</button>
+        </div>
+    </div>
+
+    <!-- સ્ક્રીન ૩: રિપોર્ટ કાર્ડ સ્ક્રીન -->
+    <div id="screen-report" class="screen">
+        <div class="school-header" style="padding: 12px; margin-bottom: 15px;">
+            <h2 style="font-size: 18px;">RANGPUR PRI. SCHOOL, TA: VANSDA, DI: NAVSARI</h2>
+            <h4 style="font-size: 14px;">CREATED BY: TR. KETAN SOLANKI</h4>
+        </div>
+
+        <div class="title-box" style="font-size: 16px;">
+            📑 મૂલ્યાંકન રિપોર્ટ કાર્ડ <br> ધોરણ 8 - વિજ્ઞાન: પ્રકરણ 2 - સૂક્ષ્મજીવો: મિત્ર અને શત્રુ
+        </div>
+        
+        <div class="info-bar">
+            <span>નામ: <span id="rep-name"></span></span>
+            <span>રોલ નંબર: <span id="rep-roll"></span></span>
+        </div>
+
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>લેવલ / અધ્યયન નિષ્પત્તિ</th>
+                    <th>મેળવેલ ગુણ</th>
+                    <th>સ્થિતિ</th>
+                </tr>
+            </thead>
+            <tbody id="report-body"></tbody>
+        </table>
+
+        <div class="info-bar" style="background: #e8f5e9; font-size: 18px;">
+            <span>કુલ મેળવેલ ગુણ: <span id="rep-total-score">0</span> / <span id="rep-max-score">80</span> (<span id="rep-percentage">0</span>%)</span>
+            <span>પરિણામ: <span id="rep-status"></span></span>
+        </div>
+
+        <div id="sheet-status"></div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" onclick="showScreen('screen-game')">🔙 ગેમ પર પાછા જાઓ</button>
+                <button class="btn" onclick="window.print()">🖨️ પ્રિન્ટ રિપોર્ટ</button>
+            </div>
+            <button class="btn" style="background: #e67e22;" onclick="resetGame()">🔄 નવી ગેમ શરૂ કરો (હોમ પેજ)</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- મોડલ પોપઅપ -->
+<div class="modal-overlay" id="result-modal">
+    <div class="modal-box" id="modal-box-content">
+        <div class="modal-icon" id="modal-icon">🌟</div>
+        <div class="modal-title" id="modal-title">અભિનંદન!</div>
+        <p style="color: #666; margin: 5px 0; font-size: 16px;" id="modal-desc">તમે લેવલ પૂર્ણ કર્યું છે.</p>
+        <div class="modal-score" id="modal-score-text">0/0</div>
+        <button class="btn" style="margin-top: 20px;" onclick="closeModal()">આગળ વધો 👍</button>
+    </div>
+</div>
+
+<script>
+    // -------------------------------------------------------------
+    // Google Apps Script ની નવી Web App URL અહીં ઉમેરેલી છે:
+    // -------------------------------------------------------------
+    const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxXeGDCNeeQSE-os31DniXheM1nHq5zv7zkAy_Uq5USGmTOj_9OhhLo6PuxCxpKlHp_FQ/exec";
+
+    let student = { name: '', roll: '' };
+    let totalScore = 0;
+    let currentLevel = 1;
+    let attemptsCount = 0;
+
+    let levelScores = { 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0 };
+    let levelPlayed = { 1:false, 2:false, 3:false, 4:false, 5:false, 6:false, 7:false, 8:false, 9:false, 10:false, 11:false, 12:false };
+
+    const levelTopics = [
+        '',
+        '📌 L.O. SC802: રોગો અને સૂક્ષ્મજીવો - વિકલ્પો ૧ (૮ ગુણ)',
+        '📌 L.O. SC802: રોગો અને સૂક્ષ્મજીવો - વિકલ્પો ૨ (૮ ગુણ)',
+        '📌 L.O. SC802: સાચાં જોડકાં જોડો (૪ ગુણ)',
+        '📌 L.O. SC802: સાચાં જોડકાં જોડો (૫ ગુણ)',
+        '📌 L.O. SC802: વર્ગીકરણ કરો (૧૪ ગુણ)',
+        '📌 L.O. SC802: લાક્ષણિકતા આધારે મને ઓળખો (૬ પ્રશ્નો - ૬ ગુણ)',
+        '📌 L.O. SC803: સરળ તપાસ આધારિત પ્રશ્નો (૪ ગુણ)',
+        '📌 L.O. SC804: પ્રક્રિયા અને ઘટનાના કારણો (૪ ગુણ)',
+        '📌 L.O. SC805: વિજ્ઞાન સમજણ અને ઉખાણાં (૭ પ્રશ્નો - ૭ ગુણ)',
+        '📌 L.O. SC811: રોજિંદા જીવનમાં વ્યવહારુ ઉપયોગ (૯ ગુણ)',
+        '📌 L.O. SC812: વૈજ્ઞાનિક શોધો અને યોગદાન (૭ ગુણ)',
+        '📌 L.O. SC812: ખરાં-ખોટાં વિધાનો (૮ ગુણ)'
+    ];
+
+    const levelNames = [
+        '', '૧. લેવલ ૧', '૨. લેવલ ૨', '૩. લેવલ ૩', '૪. લેવલ ૪',
+        '૫. લેવલ ૫', '૬. લેવલ ૬', '૭. લેવલ ૭', '૮. લેવલ ૮',
+        '૯. લેવલ ૯', '૧૦. લેવલ ૧૦', '૧૧. લેવલ ૧૧', '૧૨. લેવલ ૧૨'
+    ];
+
+    const colors = ['#e1f5fe', '#e8f5e9', '#fff3e0', '#f3e5f5', '#efebe9'];
+    const borderColors = ['#0288d1', '#388e3c', '#f57c00', '#7b1fa2', '#5d4037'];
+
+    // ૧. જોડકાં ડેટા ૧ (૪ ગુણ)
+    const matchData1 = [
+        { left: '૧. પ્રજીવ', right: 'મેલેરિયા' },
+        { left: '૨. ફૂગ', right: 'ઘઉંનો અંગારિયો' },
+        { left: '૩. બેક્ટેરિયા', right: 'ટાઇફોઇડ' },
+        { left: '૪. વાઇરસ', right: 'કોરોના' }
+    ];
+
+    // ૨. જોડકાં ડેટા ૨ (૫ ગુણ)
+    const matchData2 = [
+        { left: '૧. રાઇઝોબીયમ', right: 'નાઇટ્રોજનનું સ્થાપન' },
+        { left: '૨. લેક્ટોબેસિલસ', right: 'દહીં જમાવવા માટે જરૂરી' },
+        { left: '૩. માદા એડિસ મચ્છર', right: 'ડેન્ગ્યુનો વાહક' },
+        { left: '૪. યીસ્ટ', right: 'આથવણની ક્રિયા માટે' },
+        { left: '૫. વાયરસ', right: 'એઇડ્સ કારક' }
+    ];
+
+    // વર્ગીકરણ ડેટા (૧૪ ગુણ)
+    const allClassData = [
+        {
+            title: '૧. લીલ, ફૂગ અને પ્રજીવમાં વર્ગીકરણ કરો:',
+            items: ['ક્લેમિડોમોનાસ', 'અમીબા', 'બ્રેડ મોલ્ડ', 'પેરામિશિયમ', 'પેનિસિલિયમ'],
+            box1: 'પ્રજીવ', box2: 'ફૂગ / લીલ',
+            ans1: ['અમીબા', 'પેરામિશિયમ'], ans2: ['ક્લેમિડોમોનાસ', 'બ્રેડ મોલ્ડ', 'પેનિસિલિયમ']
+        },
+        {
+            title: '૨. ગુણધર્મોને લીલ અને ફૂગમાં વર્ગીકૃત કરો:',
+            items: ['તે પરાવલંબી છે', 'તે સ્વાવલંબી છે', 'આથવણમાં મદદરૂપ', 'ક્લોરોફિલ ધરાવે છે'],
+            box1: 'લીલ', box2: 'ફૂગ',
+            ans1: ['તે સ્વાવલંબી છે', 'ક્લોરોફિલ ધરાવે છે'], ans2: ['તે પરાવલંબી છે', 'આથવણમાં મદદરૂપ']
+        },
+        {
+            title: '૩. રોગોને બેક્ટેરિયા અને વાયરસથી થતા રોગોમાં વર્ગીકૃત કરો:',
+            items: ['ઓરી', 'કોલેરા', 'ટાઇફોઇડ', 'અછબડા', 'પોલિયો'],
+            box1: 'બેક્ટેરિયાથી થતા', box2: 'વાયરસથી થતા',
+            ans1: ['કોલેરા', 'ટાઇફોઇડ'], ans2: ['ઓરી', 'અછબડા', 'પોલિયો']
+        }
+    ];
+
+    const gameQuestions = {
+        // ૧. વિકલ્પો - ભાગ ૧ (૮ ગુણ)
+        1: [
+            { type: 'mcq', q: '૧. કોલેરા કયા સૂક્ષ્મજીવથી થાય છે?', options: ['બેક્ટેરિયા', 'પ્રજીવ', 'લીલ', 'ફૂગ'], ans: 'બેક્ટેરિયા' },
+            { type: 'mcq', q: '૨. ટાઇફોઇડ શાના દ્વારા ફેલાય છે?', options: ['મચ્છર', 'હવા', 'પાણી', 'ખોરાક'], ans: 'પાણી' },
+            { type: 'mcq', q: '૩. હિપેટાઇટિસ A કયા સૂક્ષ્મ જીવથી થતો રોગ છે?', options: ['વાયરસ', 'બેક્ટેરિયા', 'પ્રજીવ', 'ફૂગ'], ans: 'વાયરસ' },
+            { type: 'mcq', q: '૪. હિપેટાઇટિસ A શાના દ્વારા ફેલાય છે?', options: ['પાણી', 'ખોરાક', 'સંપર્ક', 'હવા'], ans: 'પાણી' },
+            { type: 'mcq', q: '૫. મેલેરિયા કયા રોગકારક સૂક્ષ્મજીવ દ્વારા થાય છે?', options: ['પ્રજીવ', 'વાયરસ', 'બેક્ટેરિયા', 'ફૂગ'], ans: 'પ્રજીવ' },
+            { type: 'mcq', q: '૬. મેલેરિયા શાના દ્વારા ફેલાય છે?', options: ['મચ્છર', 'પાણી', 'ખોરાક', 'હવા'], ans: 'મચ્છર' },
+            { type: 'mcq', q: '૭. કયો સૂક્ષ્મજીવ નાઇટ્રોજન સ્થાપન કરે છે?', options: ['રાઇઝોબિયમ', 'યીસ્ટ', 'અમીબા', 'પ્લાઝમોડિયમ'], ans: 'રાઇઝોબિયમ' },
+            { type: 'mcq', q: '૮. ડેન્ગ્યુ વાયરસનો વાહક કયો મચ્છર છે?', options: ['માદા એડિસ', 'માદા એનોફિલિસ', 'સાધારણ મચ્છર', 'માખી'], ans: 'માદા એડિસ' }
+        ],
+
+        // ૨. વિકલ્પો - ભાગ ૨ (૮ ગુણ)
+        2: [
+            { type: 'mcq', q: '૧. નીચેનામાંથી કયો વનસ્પતિજન્ય રોગ નથી?', options: ['એન્થ્રેક્સ', 'લીંબુના બળીયા ટપકાનો રોગ', 'ઘઉંનો અંગારીઓ', 'ભીંડાનો પીળી નસનો રોગ'], ans: 'એન્થ્રેક્સ' },
+            { type: 'mcq', q: '૨. ભીંડાનો પીળી નસનો રોગ કયા સૂક્ષ્મજીવથી થાય છે?', options: ['ફૂગ', 'બેક્ટેરિયા', 'પ્રજીવ', 'વાયરસ'], ans: 'વાયરસ' },
+            { type: 'mcq', q: '૩. ભીંડાનો પીળી નસનો રોગ શાના દ્વારા ફેલાય છે?', options: ['જીવજંતુ', 'હવા', 'બીજ', 'પાણી'], ans: 'જીવજંતુ' },
+            { type: 'mcq', q: '૪. લીંબુના બળીયા ટપકાનો રોગ કયા સૂક્ષ્મજીવ દ્વારા થાય છે?', options: ['બેક્ટેરિયા', 'ફૂગ', 'વાયરસ', 'પ્રજીવ'], ans: 'બેક્ટેરિયા' },
+            { type: 'mcq', q: '૫. લીંબુના બળીયા ટપકાનો રોગ શાના દ્વારા ફેલાય છે?', options: ['હવા', 'બીજ', 'જીવજંતુ', 'પાણી'], ans: 'હવા' },
+            { type: 'mcq', q: '૬. ફૂગ : યીસ્ટ, લીલ : _____', options: ['પેનિસિલિયમ', 'ક્લેમીડોમોનાસ', 'બ્રેડ મોલ્ડ', 'એસ્પરજિલસ'], ans: 'ક્લેમીડોમોનાસ' },
+            { type: 'mcq', q: '૭. ફૂટ એન્ડ માઉથ ડિસિઝ : વાઇરસ, એન્થ્રેક્સ : ____', options: ['પ્રજીવ', 'બેક્ટેરિયા', 'લીલ', 'ફૂગ'], ans: 'બેક્ટેરિયા' },
+            { type: 'mcq', q: '૮. તમારા મતે નીચેના પૈકી કયું જોડકું સાચું છે?', options: ['પોલિયો – વાયરસ', 'મેલેરિયા - પ્રજીવ', 'ટાઇફોઇડ - બેક્ટેરિયા', 'આપેલા તમામ'], ans: 'આપેલા તમામ' }
+        ],
+
+        // ૬. મને ઓળખો (૬ પ્રશ્નો - ૬ ગુણ)
+        6: [
+            { type: 'mcq', q: '૧. (મને ઓળખો) હું બ્રેડ, પેસ્ટી અને કેક બનાવવા ઉપયોગી સૂક્ષ્મજીવ છું:', options: ['યીસ્ટ', 'અમીબા', 'રાઇઝોબિયમ', 'પેનિસિલિયમ'], ans: 'યીસ્ટ' },
+            { type: 'mcq', q: '૨. (મને ઓળખો) હું ડેન્ગ્યુ વાયરસનો વાહક છું:', options: ['માદા એડિસ મચ્છર', 'માદા એનોફિલિસ મચ્છર', 'માખી', 'વંદો'], ans: 'માદા એડિસ મચ્છર' },
+            { type: 'mcq', q: '૩. (મને ઓળખો) હું અનિયમિત આકાર ધરાવતું એકકોષી પ્રાણી છું:', options: ['અમીબા', 'પેરામિશિયમ', 'યીસ્ટ', 'હાઇડ્રા'], ans: 'અમીબા' },
+            { type: 'mcq', q: '૪. (મને ઓળખો) હું ચંપલના તળિયા જેવો આકાર ધરાવતું એકકોષી પ્રાણી છું:', options: ['પેરામિશિયમ', 'અમીબા', 'યુગ્લીના', 'વુચેરેરિયા'], ans: 'પેરામિશિયમ' },
+            { type: 'mcq', q: '૫. (મને ઓળખો) હું દહીંમાં રહેલો બેક્ટેરિયા છું:', options: ['લેક્ટોબેસિલસ', 'રાઇઝોબિયમ', 'એઝેટોબેક્ટર', 'ઈ-કોલાઈ'], ans: 'લેક્ટોબેસિલસ' },
+            { type: 'mcq', q: '૬. (મને ઓળખો) હું જૈવિક નાઇટ્રોજન સ્થાપક બેક્ટેરિયા છું:', options: ['રાઇઝોબિયમ', 'લેક્ટોબેસિલસ', 'સ્ટ્રેપ્ટોકોકસ', 'યીસ્ટ'], ans: 'રાઇઝોબિયમ' }
+        ],
+
+        // ૭. સરળ તપાસ (૪ ગુણ)
+        7: [
+            { type: 'mcq', q: '૧. જામની જાળવણી તમે કેવી રીતે કરશો?', options: ['શર્કરાની મદદથી', 'મીઠાની મદદથી', 'તેલ દ્વારા', 'વિનેગર દ્વારા'], ans: 'શર્કરાની મદદથી' },
+            { type: 'mcq', q: '૨. આંબલીની જાળવણી તમે કેવી રીતે કરશો?', options: ['મીઠાની મદદથી', 'શર્કરાની મદદથી', 'તેલ દ્વારા', 'વિનેગર દ્વારા'], ans: 'મીઠાની મદદથી' },
+            { type: 'mcq', q: '૩. દૂધમાંથી દહીં બનાવવા માટે કઈ પરિસ્થિતિ અનુકૂળ છે?', options: ['હૂંફાળું દૂધ અને મેલવણ', 'ઉકળતું ગરમ દૂધ', 'એકદમ બરફ જેવું ઠંડું દૂધ', 'દૂધને પાણીમાં ઉમેરીને'], ans: 'હૂંફાળું દૂધ અને મેલવણ' },
+            { type: 'mcq', q: '૪. અથાણાં લાંબો સમય સાચવવા માટે કયો જાળવણીકારક પદાર્થ ઉમેરાય છે?', options: ['તેલ અને વિનેગર', 'પાણી', 'ખાંડ', 'દૂધ'], ans: 'તેલ અને વિનેગર' }
+        ],
+
+        // ૮. કારણો (૪ ગુણ)
+        8: [
+            { type: 'mcq', q: '૧. મેલેરિયા થવા માટે જવાબદાર પ્રજીવનો વાહક કયો છે?', options: ['માદા એનોફીલીસ મચ્છર', 'વંદો', 'માખી', 'પતંગિયું'], ans: 'માદા એનોફીલીસ મચ્છર' },
+            { type: 'mcq', q: '૨. બ્રેડ અથવા ઇડલીની કણક ફૂલવાનું કારણ શું છે?', options: ['યીસ્ટકોષોની વૃદ્ધિ', 'ગરમી', 'પીસવું', 'મસળવું'], ans: 'યીસ્ટકોષોની વૃદ્ધિ' },
+            { type: 'mcq', q: '૩. ખોરાક બગડી રહ્યો છે તે શાના પરથી ખબર પડે છે?', options: ['ખોરાકમાંથી વાસ આવવી', 'સ્વાદ ખરાબ થવો', 'રંગ-રૂપ બદલાવવું', 'આપેલ તમામ'], ans: 'આપેલ તમામ' },
+            { type: 'mcq', q: '૪. બેક્ટેરિયા સર્વવ્યાપી છે કારણ કે...', options: ['તે જમીન, પાણી અને હવામાં રહે છે', 'તે ફક્ત પાણીમાં રહે છે', 'તે ફક્ત હવામાં રહે છે', 'તે માત્ર પ્રયોગશાળામાં હોય છે'], ans: 'તે જમીન, પાણી અને હવામાં રહે છે' }
+        ],
+
+        // ૯. સમજણ અને ઉખાણાં (૭ પ્રશ્નો - ૭ ગુણ)
+        9: [
+            { type: 'mcq', q: '૧. પેશચ્યુરાઇઝેશન પદ્ધતિ એટલે શું?', options: ['દૂધને 70°C તાપમાને 15 થી 30 સેકન્ડ ગરમ કરી તરત જ ઠંડું કરવું', 'દૂધને 50°C તાપમાને 5 મિનિટ ગરમ કરવું', 'દૂધને 100°C પર ઉકાળવું', 'દૂધને બરફમાં મૂકવું'], ans: 'દૂધને 70°C તાપમાને 15 થી 30 સેકન્ડ ગરમ કરી તરત જ ઠંડું કરવું' },
+            { type: 'mcq', q: '૨. અથાણાને બગડતા કોણ અટકાવે છે?', options: ['તેલ અને વિનેગર', 'એસિડ', 'શર્કરા', 'બેઇઝ'], ans: 'તેલ અને વિનેગર' },
+            { type: 'mcq', q: '૩. શર્કરાનું શામાં રૂપાંતર થવાની ક્રિયાને આથવણ કહે છે?', options: ['આલ્કોહોલ', 'કાર્બોદિત', 'ગ્લુકોઝ', 'સ્ટાર્ચ'], ans: 'આલ્કોહોલ' },
+            { type: 'mcq', q: '૪. (ઉખાણું ૧) હું દૂધને દહીંમાં ફેરવું છું, પણ મને નરી આંખે જોઇ શકતા નથી. હું કોણ છું?', options: ['લેક્ટોબેસિલસ', 'યીસ્ટ', 'અમીબા', 'વાયરસ'], ans: 'લેક્ટોબેસિલસ' },
+            { type: 'mcq', q: '૫. (ઉખાણું ૨) હું રોટલીને ફૂલાવું છું અને દારૂ બનાવવામાં મદદ કરું છું. હું એક ફૂગ છું. હું કોણ છું?', options: ['યીસ્ટ', 'પેનિસિલિયમ', 'મશરૂમ', 'લીલ'], ans: 'યીસ્ટ' },
+            { type: 'mcq', q: '૬. (ઉખાણું ૩) હું પાણીમાં રહું છું અને મચ્છર મને ફેલાવે છે. મારાથી મેલેરિયા થાય છે. હું કોણ છું?', options: ['પ્લાઝમોડિયમ (પ્રજીવ)', 'વાયરસ', 'બેક્ટેરિયા', 'લીલ'], ans: 'પ્લાઝમોડિયમ (પ્રજીવ)' },
+            { type: 'mcq', q: '૭. (ઉખાણું ૪) હું ખોરાકને લાંબા સમય સુધી સારો રાખું છું. મને ગરમ કરીને કે ઠંડો કરીને વાપરી શકાય. હું કોણ છું?', options: ['જાળવણીકારક પદ્ધતિ / પદાર્થ', 'પાણી', 'હવા', 'માટી'], ans: 'જાળવણીકારક પદ્ધતિ / પદાર્થ' }
+        ],
+
+        // ૧૦. રોજિંદો ઉપયોગ (૯ ગુણ)
+        10: [
+            { type: 'mcq', q: '૧. જામ, જેલી અને ફળોના રસની જાળવણી કરવા શેનો ઉપયોગ થાય છે?', options: ['શર્કરા (ખાંડ)', 'મીઠું', 'તેલ', 'વિનેગર'], ans: 'શર્કરા (ખાંડ)' },
+            { type: 'mcq', q: '૨. માંસ અને માછલીની જાળવણી માટે કયા પદાર્થનો ઉપયોગ થાય છે?', options: ['મીઠું', 'શર્કરા', 'તેલ', 'વિનેગર'], ans: 'મીઠું' },
+            { type: 'mcq', q: '૩. નરી આંખે ન દેખાતા સૂક્ષ્મજીવો જોવા માટે કયા સાધનનો ઉપયોગ કરશો?', options: ['સૂક્ષ્મદર્શક યંત્ર (માઇક્રોસ્કોપ)', 'થર્મોમીટર', 'બેરોમીટર', 'કેલિડોસ્કોપ'], ans: 'સૂક્ષ્મદર્શક યંત્ર (માઇક્રોસ્કોપ)' },
+            { type: 'mcq', q: '૪. મચ્છરનો ઉપદ્રવ અટકાવવા નીચેનામાંથી કઈ કાળજી લેશો?', options: ['કુલરમાં પાણી રહેવા દેવું જોઇએ નહીં', 'ચોમાસામાં ખુલ્લા ટાયર રાખવા નહીં', 'ફૂલદાનીમાં પાણી ભરી રાખવું જોઈએ નહીં', 'આપેલી તમામ'], ans: 'આપેલી તમામ' },
+            { type: 'mcq', q: '૫. માલવ દૂધને પેશચ્યુરાઇઝ્ડ કરવા માંગે છે, તો તેણે દૂધને કેટલા તાપમાને ગરમ કરવું જોઇએ?', options: ['70°C', '100°C', '80°C', '50°C'], ans: '70°C' },
+            { type: 'mcq', q: '૬. દૂધને પેશચ્યુરાઇઝ્ડ કરવા 70°C તાપમાને કેટલા સમય સુધી ગરમ કરશો?', options: ['15 થી 30 સેકન્ડ', '50 થી 75 સેકન્ડ', '30 થી 45 સેકન્ડ', '1 થી 15 સેકન્ડ'], ans: '15 થી 30 સેકન્ડ' },
+            { type: 'mcq', q: '૭. મયુર નીચેનામાંથી કઈ વસ્તુ બનાવવા યીસ્ટનો ઉપયોગ કરશે નહીં?', options: ['દહીં બનાવવા', 'બ્રેડ બનાવવા', 'કેક પેસ્ટ્રી બનાવવા', 'ઢોસા બનાવવા'], ans: 'દહીં બનાવવા' },
+            { type: 'mcq', q: '૮. ખોરાકને સૂક્ષ્મજીવોથી બચાવવા કયા રસાયણનો ઉપયોગ થાય છે?', options: ['સોડિયમ બેન્ઝોએટ', 'સોડિયમ ક્લોરાઇડ', 'કેલ્શિયમ કેલ્શાઇડ', 'પોટેશિયમ'], ans: 'સોડિયમ બેન્ઝોએટ' },
+            { type: 'mcq', q: '૯. રોગપ્રતિકારક શક્તિ વધારવા માટે બાળકોને શું આપવામાં આવે છે?', options: ['રસી (Vaccine)', 'વિટામીન', 'ગ્લુકોઝ', 'સિરોપ'], ans: 'રસી (Vaccine)' }
+        ],
+
+        // ૧૧. શોધો (૭ ગુણ)
+        11: [
+            { type: 'mcq', q: '૧. આથવણની શોધ કયા વૈજ્ઞાનિકે કરી હતી?', options: ['લુઈ પાશ્ચર', 'એલેક્ઝાન્ડર ફ્લેમિંગ', 'એડવર્ડ જેનર', 'રોબર્ટ કોચ'], ans: 'લુઈ પાશ્ચર' },
+            { type: 'mcq', q: '૨. પેનિસિલિનની શોધ કયા વૈજ્ઞાનિકે કરી હતી?', options: ['એલેક્ઝાન્ડર ફ્લેમિંગ', 'રોબર્ટ કોચ', 'એડવર્ડ જેનર', 'લુઈ પાશ્ચર'], ans: 'એલેક્ઝાન્ડર ફ્લેમિંગ' },
+            { type: 'mcq', q: '૩. ઈ.સ. 1929 માં શાની શોધ થઈ હતી?', options: ['પેનિસિલિન', 'શીતળાની રસી', 'આથવણ', 'બેસીલસ એન્થ્રેસિસ'], ans: 'પેનિસિલિન' },
+            { type: 'mcq', q: '૪. એડવર્ડ જેનરે કઈ રસીની શોધ કરી હતી?', options: ['શીતળાની રસી', 'કમળાની રસી', 'અછબડાની રસી', 'મેલેરિયાની રસી'], ans: 'શીતળાની રસી' },
+            { type: 'mcq', q: '૫. આપેલ જોડકા પૈકી ખોટું જોડકું કયું છે?', options: ['લૂઈ પાશ્ચર - પોલિયાની રસી', 'એલેક્ઝાન્ડર ફ્લેમિંગ - પેનિસિલિન', 'એડવર્ડ જેનર - શીતળાની રસી', 'રોબર્ટ કોચ - એન્થ્રેસિસ બેક્ટેરિયા'], ans: 'લૂઈ પાશ્ચર - પોલિયાની રસી' },
+            { type: 'mcq', q: '૬. પેશચ્યુરાઈઝેશન પદ્ધતિની શોધ કોણે કરી હતી?', options: ['લુઈ પાશ્ચર', 'એલેક્ઝાન્ડર ફ્લેમિંગ', 'એડવર્ડ જેનર', 'રોબર્ટ કોચ'], ans: 'લુઈ પાશ્ચર' },
+            { type: 'mcq', q: '૭. રોબર્ટ કોચ નામના વૈજ્ઞાનિકે કયા બેક્ટેરિયાની શોધ કરી હતી?', options: ['બેસિલસ એન્થ્રેસિસ', 'લેક્ટોબેસિલસ', 'રાઇઝોબિયમ', 'ઈ-કોલાઈ'], ans: 'બેસિલસ એન્થ્રેસિસ' }
+        ],
+
+        // ૧૨. ખરાં-ખોટાં (૮ ગુણ)
+        12: [
+            { type: 'tf', q: '૧. લુઈ પાશ્વરે શીતળાની રસીની શોધ કરી હતી.', ans: 'ખોટું' },
+            { type: 'tf', q: '૨. એલેક્ઝાન્ડર ફ્લેમિંગે પેનિસિલિનની શોધ કરી.', ans: 'ખરું' },
+            { type: 'tf', q: '૩. પેશ્ચ્યુરાઇઝેશન પદ્ધતિની શોધ લુઈ પાશ્વરે કરી હતી.', ans: 'ખરું' },
+            { type: 'tf', q: '૪. શીતળાની રસીની શોધ એડવર્ડ જેનરે કરી હતી.', ans: 'ખરું' },
+            { type: 'tf', q: '૫. રોબર્ટ કોચે એન્થ્રેસિસ બેક્ટેરિયાની શોધ કરી.', ans: 'ખરું' },
+            { type: 'tf', q: '૬. લુઈ પાશ્વરે આથવણની શોધ કરી.', ans: 'ખરું' },
+            { type: 'tf', q: '૭. ક્ષય (TB) બેક્ટેરિયાથી થતો રોગ છે.', ans: 'ખરું' },
+            { type: 'tf', q: '૮. રાઇઝોબિયમ બૅક્ટેરિયા કઠોળ વર્ગની વનસ્પતિના મૂળમાં નાઇટ્રોજન સ્થાપન કરે છે.', ans: 'ખરું' }
+        ]
+    };
+
+    let userMatches1 = {};
+    let userMatches2 = {};
+    let selectedLeft = null;
+    let userBoxClass = {};
+    let selectedClassItem = null;
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(screenId).classList.add('active-screen');
+    }
+
+    function startApp() {
+        const nameInput = document.getElementById('student-name').value.trim();
+        const rollInput = document.getElementById('student-roll').value.trim();
+        if (!nameInput || !rollInput) { alert('કૃપા કરીને નામ અને રોલ નંબર લખો!'); return; }
+        
+        student.name = nameInput; student.roll = rollInput;
+        attemptsCount++;
+        document.getElementById('disp-name').innerText = student.name;
+        document.getElementById('disp-roll').innerText = student.roll;
+        
+        for (let i = 0; i < allClassData.length; i++) {
+            userBoxClass[i] = { box1: [], box2: [] };
+        }
+
+        document.getElementById('total-max').innerText = "80";
+        document.getElementById('rep-max-score').innerText = "80";
+
+        showScreen('screen-game');
+        switchLevel(1);
+    }
+
+    function resetGame() {
+        student = { name: '', roll: '' };
+        totalScore = 0; currentLevel = 1;
+        levelScores = { 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0 };
+        levelPlayed = { 1:false, 2:false, 3:false, 4:false, 5:false, 6:false, 7:false, 8:false, 9:false, 10:false, 11:false, 12:false };
+        
+        document.getElementById('student-name').value = '';
+        document.getElementById('student-roll').value = '';
+        
+        for (let i = 1; i <= 12; i++) {
+            document.getElementById(`tab-${i}`).classList.remove('completed');
+        }
+        showScreen('screen-welcome');
+    }
+
+    function switchLevel(lvl) {
+        currentLevel = lvl;
+        for (let i = 1; i <= 12; i++) {
+            const tab = document.getElementById(`tab-${i}`);
+            tab.classList.remove('active');
+            if (i === lvl) tab.classList.add('active');
+        }
+        document.getElementById('level-title-text').innerText = levelNames[lvl];
+        document.getElementById('level-topic-text').innerText = levelTopics[lvl];
+        document.getElementById('level-score').innerText = levelScores[lvl] || 0;
+        
+        let maxS = lvl === 3 ? 4 : (lvl === 4 ? 5 : (lvl === 5 ? 14 : gameQuestions[lvl].length));
+        document.getElementById('level-max').innerText = maxS;
+        
+        renderQuestions(lvl);
+    }
+
+    function renderQuestions(lvl) {
+        const container = document.getElementById('all-questions-area');
+        let html = '';
+
+        if (lvl === 3) {
+            let shuffledRights = [...matchData1].map((d, idx) => ({ text: d.right, origIdx: idx })).sort(() => Math.random() - 0.5);
+            html += `<div class="single-question-card">
+                <p style="font-weight:bold; color:var(--primary);">👉 ડાબી બાજુ ક્લિક કરી જમણી બાજુ સાચા જવાબ પર ક્લિક કરો.</p>
+                <div class="match-grid">
+                    <div class="match-col">`;
+            matchData1.forEach((d, i) => {
+                html += `<div class="match-item" id="left-${i}" onclick="selectLeftItem(${i})">${d.left}</div>`;
+            });
+            html += `</div><div class="match-col">`;
+            shuffledRights.forEach((d, i) => {
+                html += `<div class="match-item" id="right-${i}" onclick="selectRightItem(${i}, '${d.text}', 1)">${d.text}</div>`;
+            });
+            html += `</div></div><div class="feedback-badge" id="fb-lvl3"></div></div>`;
+        }
+        else if (lvl === 4) {
+            let shuffledRights = [...matchData2].map((d, idx) => ({ text: d.right, origIdx: idx })).sort(() => Math.random() - 0.5);
+            html += `<div class="single-question-card">
+                <p style="font-weight:bold; color:var(--primary);">👉 ડાબી બાજુ ક્લિક કરી જમણી બાજુ સાચા જવાબ પર ક્લિક કરો.</p>
+                <div class="match-grid">
+                    <div class="match-col">`;
+            matchData2.forEach((d, i) => {
+                html += `<div class="match-item" id="left-${i}" onclick="selectLeftItem(${i})">${d.left}</div>`;
+            });
+            html += `</div><div class="match-col">`;
+            shuffledRights.forEach((d, i) => {
+                html += `<div class="match-item" id="right-${i}" onclick="selectRightItem(${i}, '${d.text}', 2)">${d.text}</div>`;
+            });
+            html += `</div></div><div class="feedback-badge" id="fb-lvl4"></div></div>`;
+        }
+        else if (lvl === 5) {
+            allClassData.forEach((c, qIdx) => {
+                html += `<div class="single-question-card">
+                    <div class="q-title">${c.title}</div>
+                    <p style="font-size:14px; color:#555;">પહેલાં વસ્તુ પર ક્લિક કરો, પછી યોગ્ય બોક્સ પર ક્લિક કરો:</p>
+                    <div class="class-items" id="class-items-${qIdx}">`;
+                c.items.forEach((item, itemIdx) => {
+                    html += `<div class="class-item-btn" id="citem-${qIdx}-${itemIdx}" onclick="selectClassItem(${qIdx}, ${itemIdx}, '${item}')">${item}</div>`;
+                });
+                html += `</div>
+                    <div class="class-boxes">
+                        <div class="class-box" onclick="putInBox(${qIdx}, 'box1')">
+                            <h4>📦 ${c.box1}</h4>
+                            <div class="box-tags" id="box1-tags-${qIdx}"></div>
+                        </div>
+                        <div class="class-box" onclick="putInBox(${qIdx}, 'box2')">
+                            <h4>📦 ${c.box2}</h4>
+                            <div class="box-tags" id="box2-tags-${qIdx}"></div>
+                        </div>
+                    </div>
+                    <div class="feedback-badge" id="fb-lvl5-${qIdx}"></div>
+                </div>`;
+            });
+        }
+        else {
+            gameQuestions[lvl].forEach((qData, index) => {
+                html += `<div class="single-question-card" id="q-card-${index}"><div class="q-title">${qData.q}</div>`;
+                if (qData.type === 'tf') {
+                    html += `<div class="tf-grid">
+                        <label class="tf-btn-label" onclick="selectTF(${index}, 'ખરું', this)"><input type="radio" name="q_opt_${index}" value="ખરું"> ✔ ખરું</label>
+                        <label class="tf-btn-label" onclick="selectTF(${index}, 'ખોટું', this)"><input type="radio" name="q_opt_${index}" value="ખોટું"> ✖ ખોટું</label>
+                    </div>`;
+                } else {
+                    html += `<div class="options-grid">`;
+                    qData.options.forEach(opt => html += `<label class="opt-label"><input type="radio" name="q_opt_${index}" value="${opt}"> ${opt}</label>`);
+                    html += `</div>`;
+                }
+                html += `<div class="feedback-badge" id="fb-${index}"></div></div>`;
+            });
+        }
+
+        container.innerHTML = html;
+        document.getElementById('submit-level-btn').disabled = false;
+    }
+
+    function selectLeftItem(idx) {
+        if(levelPlayed[currentLevel]) return;
+        document.querySelectorAll('.match-col .match-item').forEach(el => {
+            if(el.id.startsWith('left')) el.classList.remove('selected');
+        });
+        selectedLeft = idx;
+        document.getElementById(`left-${idx}`).classList.add('selected');
+    }
+
+    function selectRightItem(rIdx, text, type) {
+        if(levelPlayed[currentLevel] || selectedLeft === null) return;
+        let colorIdx = selectedLeft % colors.length;
+        if(type === 1) userMatches1[selectedLeft] = text;
+        if(type === 2) userMatches2[selectedLeft] = text;
+
+        document.getElementById(`left-${selectedLeft}`).style.background = colors[colorIdx];
+        document.getElementById(`left-${selectedLeft}`).style.borderColor = borderColors[colorIdx];
+        document.getElementById(`left-${selectedLeft}`).classList.remove('selected');
+
+        document.getElementById(`right-${rIdx}`).style.background = colors[colorIdx];
+        document.getElementById(`right-${rIdx}`).style.borderColor = borderColors[colorIdx];
+
+        selectedLeft = null;
+    }
+
+    function selectClassItem(qIdx, itemIdx, itemText) {
+        if(levelPlayed[5]) return;
+        document.querySelectorAll(`#class-items-${qIdx} .class-item-btn`).forEach(el => el.classList.remove('selected'));
+        selectedClassItem = { qIdx, itemIdx, itemText };
+        document.getElementById(`citem-${qIdx}-${itemIdx}`).classList.add('selected');
+    }
+
+    function putInBox(qIdx, boxName) {
+        if(levelPlayed[5] || !selectedClassItem || selectedClassItem.qIdx !== qIdx) return;
+        let item = selectedClassItem.itemText;
+        
+        userBoxClass[qIdx].box1 = userBoxClass[qIdx].box1.filter(i => i !== item);
+        userBoxClass[qIdx].box2 = userBoxClass[qIdx].box2.filter(i => i !== item);
+
+        userBoxClass[qIdx][boxName].push(item);
+        document.getElementById(`citem-${qIdx}-${selectedClassItem.itemIdx}`).style.display = 'none';
+
+        renderBoxTags(qIdx);
+        selectedClassItem = null;
+    }
+
+    function renderBoxTags(qIdx) {
+        let b1 = document.getElementById(`box1-tags-${qIdx}`);
+        let b2 = document.getElementById(`box2-tags-${qIdx}`);
+        b1.innerHTML = userBoxClass[qIdx].box1.map(i => `<span class="box-tag">${i}</span>`).join('');
+        b2.innerHTML = userBoxClass[qIdx].box2.map(i => `<span class="box-tag">${i}</span>`).join('');
+    }
+
+    function selectTF(qIdx, val, element) {
+        element.parentElement.querySelectorAll('.tf-btn-label').forEach(lbl => lbl.classList.remove('selected-true', 'selected-false'));
+        element.classList.add(val === 'ખરું' ? 'selected-true' : 'selected-false');
+    }
+
+    function checkAllAnswers() {
+        let correctCount = 0;
+
+        if (currentLevel === 3) {
+            if(Object.keys(userMatches1).length < matchData1.length) {
+                alert('કૃપા કરીને તમામ જોડકાં જોડો!'); return;
+            }
+            matchData1.forEach((d, i) => { if(userMatches1[i] === d.right) correctCount++; });
+            const fb = document.getElementById('fb-lvl3'); fb.style.display = 'block';
+            fb.innerHTML = `<span class="text-success">તમે ૪ માંથી ${correctCount} જોડકાં સાચા જોડ્યા છે!</span>`;
+        } 
+        else if (currentLevel === 4) {
+            if(Object.keys(userMatches2).length < matchData2.length) {
+                alert('કૃપા કરીને તમામ જોડકાં જોડો!'); return;
+            }
+            matchData2.forEach((d, i) => { if(userMatches2[i] === d.right) correctCount++; });
+            const fb = document.getElementById('fb-lvl4'); fb.style.display = 'block';
+            fb.innerHTML = `<span class="text-success">તમે ૫ માંથી ${correctCount} જોડકાં સાચા જોડ્યા છે!</span>`;
+        }
+        else if (currentLevel === 5) {
+            let totalClassCorrect = 0;
+            allClassData.forEach((c, qIdx) => {
+                let cScore = 0;
+                c.ans1.forEach(item => { if(userBoxClass[qIdx].box1.includes(item)) cScore += 1; });
+                c.ans2.forEach(item => { if(userBoxClass[qIdx].box2.includes(item)) cScore += 1; });
+                totalClassCorrect += cScore;
+                
+                const fb = document.getElementById(`fb-lvl5-${qIdx}`);
+                fb.style.display = 'block';
+                fb.innerHTML = `<span class="text-success">✔ આ વર્ગીકરણ પૂરું થયું! (${cScore} સાચા જવાબ)</span>`;
+            });
+            correctCount = totalClassCorrect;
+        } 
+        else {
+            const qList = gameQuestions[currentLevel];
+            let allAnswered = true;
+            
+            for (let i = 0; i < qList.length; i++) {
+                let selected = document.querySelector(`input[name="q_opt_${i}"]:checked`)?.value || '';
+                if (!selected) { allAnswered = false; break; }
+            }
+
+            if (!allAnswered) { alert('કૃપા કરીને આ લેવલના તમામ પ્રશ્નોના જવાબ આપો!'); return; }
+
+            qList.forEach((qData, i) => {
+                let selected = document.querySelector(`input[name="q_opt_${i}"]:checked`).value;
+                document.querySelectorAll(`input[name="q_opt_${i}"]`).forEach(inp => inp.disabled = true);
+                
+                const fb = document.getElementById(`fb-${i}`); fb.style.display = 'block';
+                if (selected === qData.ans) {
+                    correctCount++; fb.innerHTML = '<span class="text-success">✔ સાચો જવાબ! (+1 ગુણ)</span>';
+                    document.getElementById(`q-card-${i}`).style.borderColor = '#2ecc71';
+                } else {
+                    fb.innerHTML = `<span class="text-danger">✖ ખોટો જવાબ! સાચો જવાબ: <b>${qData.ans}</b></span>`;
+                    document.getElementById(`q-card-${i}`).style.borderColor = '#e74c3c';
+                }
+            });
+        }
+
+        totalScore = totalScore - (levelScores[currentLevel] || 0) + correctCount;
+        levelScores[currentLevel] = correctCount; 
+        levelPlayed[currentLevel] = true;
+        
+        document.getElementById('level-score').innerText = correctCount;
+        document.getElementById('total-score').innerText = totalScore;
+        document.getElementById(`tab-${currentLevel}`).classList.add('completed');
+        document.getElementById('submit-level-btn').disabled = true;
+
+        let maxS = currentLevel === 3 ? 4 : (currentLevel === 4 ? 5 : (currentLevel === 5 ? 14 : gameQuestions[currentLevel].length));
+        showModal(correctCount, maxS);
+    }
+
+    function showModal(score, maxScore) {
+        const modal = document.getElementById('result-modal');
+        const mBox = document.getElementById('modal-box-content');
+        const icon = document.getElementById('modal-icon');
+        const title = document.getElementById('modal-title');
+        const desc = document.getElementById('modal-desc');
+        const sText = document.getElementById('modal-score-text');
+
+        sText.innerText = `${score} / ${maxScore} ગુણ`;
+
+        let ratio = score / maxScore;
+        if(ratio >= 0.8) {
+            icon.innerText = '🏆'; title.innerText = 'ઉત્કૃષ્ટ!';
+            desc.innerText = 'ખૂબ સરસ! તમારું પરિણામ ઉત્તમ છે.';
+            sText.style.color = '#2ecc71';
+        } else if(ratio >= 0.5) {
+            icon.innerText = '👍'; title.innerText = 'સારો પ્રયાસ!';
+            desc.innerText = 'તમે સારું રમ્યા. થોડો વધુ મહાવરો કરો.';
+            sText.style.color = '#f39c12';
+        } else {
+            icon.innerText = '📚'; title.innerText = 'મહાવરો જરૂરી!';
+            desc.innerText = 'તમારે આ મુદ્દાનું વધુ પુનરાવર્તન કરવાની જરૂર છે.';
+            sText.style.color = '#e74c3c';
+        }
+
+        modal.style.display = 'flex';
+        setTimeout(() => mBox.classList.add('show'), 50);
+    }
+
+    function closeModal() {
+        document.getElementById('modal-box-content').classList.remove('show');
+        setTimeout(() => document.getElementById('result-modal').style.display = 'none', 300);
+    }
+
+    function showFinalReport() {
+        document.getElementById('rep-name').innerText = student.name;
+        document.getElementById('rep-roll').innerText = student.roll;
+        document.getElementById('rep-total-score').innerText = totalScore;
+
+        let pct = (totalScore / 80) * 100;
+        document.getElementById('rep-percentage').innerText = pct.toFixed(1);
+
+        const reportBody = document.getElementById('report-body');
+        let html = '';
+        for (let i = 1; i <= 12; i++) {
+            let score = levelScores[i] || 0;
+            let maxLvl = i === 3 ? 4 : (i === 4 ? 5 : (i === 5 ? 14 : gameQuestions[i].length));
+            let status = levelPlayed[i] ? (score >= maxLvl * 0.6 ? 'સફળ (Passed)' : 'મહાવરો જરૂરી') : 'રમાયેલ નથી';
+            let statusClass = levelPlayed[i] ? (score >= maxLvl * 0.6 ? 'text-success' : 'text-danger') : '';
+
+            html += `<tr><td>${levelTopics[i]}</td><td>${score} / ${maxLvl}</td><td class="${statusClass}">${status}</td></tr>`;
+        }
+        reportBody.innerHTML = html;
+
+        let statusText = "";
+        let repStatus = document.getElementById('rep-status');
+
+        if (pct >= 60) {
+            statusText = "ઉત્કૃષ્ટ સમજણ";
+            repStatus.innerText = "✔️ (" + statusText + ")";
+            repStatus.className = 'text-success';
+        } else if (pct >= 40) {
+            statusText = "મધ્યમ સમજણ";
+            repStatus.innerText = "❓ (" + statusText + ")";
+            repStatus.className = '';
+        } else {
+            statusText = "પુનરાવર્તન જરૂરી";
+            repStatus.innerText = "✖️ (" + statusText + ")";
+            repStatus.className = 'text-danger';
+        }
+
+        showScreen('screen-report');
+        saveDataToGoogleSheet(pct.toFixed(1), statusText);
+    }
+
+    // -------------------------------------------------------------
+    // Google Sheet માં ડેટા સેવ કરવાનું ફંક્શન
+    // -------------------------------------------------------------
+    function saveDataToGoogleSheet(percentage, perfStatus) {
+        const statusDiv = document.getElementById('sheet-status');
+
+        statusDiv.style.display = 'block';
+        statusDiv.style.background = '#e3f2fd';
+        statusDiv.style.color = '#0d47a1';
+        statusDiv.innerText = '⏳ Google Sheet માં પરિણામ સેવ થઈ રહ્યું છે...';
+
+        const payload = {
+            Roll_No: student.roll,
+            Student_Name: student.name,
+            Level_1: levelScores[1] || 0,
+            Level_2: levelScores[2] || 0,
+            Level_3: levelScores[3] || 0,
+            Level_4: levelScores[4] || 0,
+            Level_5: levelScores[5] || 0,
+            Level_6: levelScores[6] || 0,
+            Level_7: levelScores[7] || 0,
+            Level_8: levelScores[8] || 0,
+            Level_9: levelScores[9] || 0,
+            Level_10: levelScores[10] || 0,
+            Level_11: levelScores[11] || 0,
+            Level_12: levelScores[12] || 0,
+            Total_Score: totalScore,
+            Percentage: percentage + '%',
+            Performance_Status: perfStatus,
+            Attempts: attemptsCount
+        };
+
+        fetch(GOOGLE_SHEET_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(() => {
+            statusDiv.style.background = '#d4edda';
+            statusDiv.style.color = '#155724';
+            statusDiv.innerText = '✅ પરિણામ Google Sheet માં સફળતાપૂર્વક સેવ થઈ ગયું છે!';
+        })
+        .catch(err => {
+            statusDiv.style.background = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.innerText = '❌ ડેટા સેવ કરવામાં ભૂલ થઈ: ' + err;
+        });
+    }
+</script>
+
+</body>
+</html>
